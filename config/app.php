@@ -260,12 +260,12 @@ return [
      */
     'Datasources' => [
         'default' => [
-            'host' => env('DATABASE_HOST', 'db'),
+            'host' => env('DATABASE_HOST', 'localhost'),
             'username' => env('DATABASE_USER', 'root'),
             'password' => env('DATABASE_PASSWORD', '123456'),
             'database' => env('DATABASE_NAME', 'cakephp_db'),
-            'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
+            'className' => 'Cake\Database\Connection',
             'unix_socket' => '/tmp/mysql.sock',
             'persistent' => false,
             'timezone' => 'UTC',
