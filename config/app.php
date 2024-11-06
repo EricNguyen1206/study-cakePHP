@@ -260,19 +260,15 @@ return [
      */
     'Datasources' => [
         'default' => [
-            'host' => env('DATABASE_HOST', 'localhost'),
-            'username' => env('DATABASE_USER', 'root'),
-            'password' => env('DATABASE_PASSWORD', '123456'),
-            'database' => env('DATABASE_NAME', 'cakephp_db'),
+            'host' => env('DB_HOST', 'mysql'), // This should match the service name in docker-compose
+            'username' => env('DB_DATABASE', 'devtest'), // This should be DB_USERNAME
+            'password' => env('DB_PASSWORD', 'devtest'),
+            'database' => env('DB_NAME', 'devtest'), // This should be DB_DATABASE
             'driver' => 'Cake\Database\Driver\Mysql',
             'className' => 'Cake\Database\Connection',
-            'unix_socket' => '/tmp/mysql.sock',
-            'persistent' => false,
-            'timezone' => 'UTC',
-            'quoteIdentifiers' => false,
             'encoding' => 'utf8mb4',
             'cacheMetadata' => true,
-            'log' => true, // Enable query logging for troubleshooting
+            'log' => true,
         ],
 
         /*

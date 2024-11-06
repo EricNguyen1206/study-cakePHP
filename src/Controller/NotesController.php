@@ -34,6 +34,7 @@ class NotesController extends AppController
             $notes = $this->Notes->find('all')->first(); // Fetch one record
             if ($notes) {
                 $this->Flash->success(__('Database connection is successful.'));
+                $this->set('notes', $notes);
             } else {
                 $this->Flash->warning(__('No notes found, but the database connection is successful.'));
             }
@@ -41,7 +42,6 @@ class NotesController extends AppController
             $this->Flash->error(__('Failed to connect to the database: ') . $e->getMessage());
         }
 
-        $this->set(compact('notes'));
     }
 
     /**

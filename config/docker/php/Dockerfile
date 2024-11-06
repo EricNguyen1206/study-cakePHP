@@ -35,8 +35,9 @@ RUN mkdir /build && apArch=$(arch); \
     wget https://nodejs.org/dist/${VERSION}/node-${VERSION}-${DISTRO}.tar.xz && \
     tar -xvf node-${VERSION}-${DISTRO}.tar.xz --strip-components=1 -C /usr/local
 
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+# pecl/xdebug requires PHP (version >= 8.0.0, version <= 8.3.99)
+# RUN pecl install xdebug \
+#     && docker-php-ext-enable xdebug
 
 RUN docker-php-ext-install tidy && docker-php-ext-enable tidy
 

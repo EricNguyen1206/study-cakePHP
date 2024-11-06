@@ -12,16 +12,16 @@ services:
       dockerfile: Dockerfile
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-    networks:
-      - study-cakephp3-net
     volumes:
       - .:/var/www/html
-      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./config/docker/php/php.ini:/usr/local/etc/php/php.ini
       - '~/.composer/docker-cache/:/home/phpdev/.composer:cached'
       - '~/.config/composer/:/home/phpdev/.config/composer:cached'
       - vscode-extensions:/home/phpdev/.vscode-server/extensions
     links:
-      - mysql
+    - mysql
+    networks:
+      - study-cakephp3-net
     # platform: linux/amd64
 
   nginx:
@@ -55,30 +55,27 @@ services:
       MYSQL_ROOT_HOST: '%'
     volumes:
       - 'study-cakephp3-volume:/var/lib/mysql'
-      # delegated'
-      # /etc/mysql/conf.d for x64
-      # for arm image
-      # - './docker/config/mysql/my.cnf:/etc/my.cnf'
     networks:
-      - study-cakephp3-net
+    - study-cakephp3-net
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
       retries: 3
       timeout: 5s
     # platform: linux/arm64
 
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin
-  #   container_name: phpmyadmin
-  #   ports:
-  #     - "8081:80"
-  #   environment:
-  #     PMA_HOST: ${PMA_HOST}
-  #     PMA_USER: ${PMA_USER}
-  #     PMA_PASSWORD: ${PMA_PASSWORD}
-  #   depends_on:
-  #     - db
-    # platform: linux/arm64
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"  # Access phpMyAdmin at http://localhost:8081
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - study-cakephp3-net
 
 networks:
   study-cakephp3-net:
