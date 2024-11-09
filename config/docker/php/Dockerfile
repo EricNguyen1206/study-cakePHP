@@ -49,6 +49,10 @@ WORKDIR /
 
 COPY composerInstall.sh .
 
+# Check network access and download composer
+RUN apt-get update && apt-get install -y curl
+RUN curl -I https://getcomposer.org
+
 RUN chmod +x composerInstall.sh && ./composerInstall.sh && rm -f composerInstall.sh
 
 RUN apt-get install -y procps
