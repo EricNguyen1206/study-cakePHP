@@ -14,10 +14,11 @@ services:
     container_name: myapp-mysql
     working_dir: /var/www/myapp
     volumes:
-        - ../mysql:/var/lib/mysql
-        - ../mysql-files:/var/lib/mysql-files
-        - ../cakephp:/var/www/myapp
-        - ./mysql/my.cnf:/etc/mysql/my.cnf
+        # - ../mysql:/var/lib/mysql
+        # - ../mysql-files:/var/lib/mysql-files
+        # - ../cakephp:/var/www/myapp
+        # - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - mysql_data:/var/lib/mysql  # Use Docker volume instead of local directory
     ports:
       - "8106:3306"
     environment:
@@ -61,3 +62,7 @@ services:
       - "8080:80"  # Expose phpMyAdmin on port 8080
     depends_on:
       - myapp-mysql
+
+# Define the volume at the bottom
+volumes:
+  mysql_data:  # This creates a named volume for MySQL data
