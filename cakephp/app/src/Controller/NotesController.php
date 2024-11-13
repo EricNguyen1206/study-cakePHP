@@ -25,19 +25,39 @@ class NotesController extends AppController
      */
     public function index()
     {
-        // $this->paginate = [
-        //     'contain' => ['Users'],
-        // ];
-        // $notes = $this->paginate($this->Notes);
+        // // Fetch all notes from the database
+        // $notes = $this->Notes->find('all', [
+        //     'order' => ['Notes.created_at' => 'DESC']
+        // ]);
 
+        // // Pass notes data to the view
         // $this->set(compact('notes'));
-        // Fetch all notes from the database
-        $notes = $this->Notes->find('all', [
-            'order' => ['Notes.created_at' => 'DESC']
+
+        // Enable the use of the RequestHandler component
+        $this->loadComponent('Paginator');
+
+        // Retrieve the search keyword, sort, and direction from query parameters
+        $search = $this->request->getQuery('search');
+        $sort = $this->request->getQuery('sort', 'created_at'); // Default sort by created_at
+        $direction = $this->request->getQuery('direction', 'desc'); // Default direction desc
+
+        // Build the query with search, sort, and direction
+        $query = $this->Notes->find()
+            // ->contain(['Users'])
+            ->order([$sort => $direction]);
+
+        // Apply search filter if provided
+        if (!empty($search)) {
+            $query->where(['Notes.title LIKE' => '%' . $search . '%']);
+        }
+
+        // Set pagination limit and other settings
+        $notes = $this->Paginator->paginate($query, [
+            'limit' => 5, // Display 5 notes per page
         ]);
 
-        // Pass notes data to the view
-        $this->set(compact('notes'));
+        // Pass data to the view
+        $this->set(compact('notes', 'search', 'sort', 'direction'));
     }
 
     /**

@@ -1,13 +1,31 @@
 <h1>Notes</h1>
 
+<div class="search-form">
+    <form method="get" action="<?= $this->Url->build(['action' => 'index']); ?>">
+        <input type="text" name="search" value="<?= h($search); ?>" placeholder="Search by title" />
+        <button type="submit">Search</button>
+        <a href="<?= $this->Url->build(['action' => 'index']); ?>">Reset</a>
+    </form>
+</div>
+
 <?php if (!empty($notes)): ?>
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Title</th>
+                <th>
+                <!-- Sort by Title -->
+                <a href="<?= $this->Url->build(['?' => ['sort' => 'title', 'direction' => $sort === 'title' &&      $direction === 'asc' ? 'desc' : 'asc']]); ?>">
+                    Title <?= $sort === 'title' ? ($direction === 'asc' ? '↑' : '↓') : ''; ?>
+                </a>
+                </th>
                 <th>Description</th>
-                <th>Created At</th>
+                <th>
+                <!-- Sort by Created At -->
+                <a href="<?= $this->Url->build(['?' => ['sort' => 'created_at', 'direction' => $sort === 'created_at' && $direction === 'asc' ? 'desc' : 'asc']]); ?>">
+                    Created At <?= $sort === 'created_at' ? ($direction === 'asc' ? '↑' : '↓') : ''; ?>
+                </a>
+                </th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -30,3 +48,11 @@
 <?php else: ?>
     <p>No notes found.</p>
 <?php endif; ?>
+
+<!-- Pagination Controls -->
+<div class="pagination">
+    <?= $this->Paginator->prev('« Previous'); ?>
+    <?= $this->Paginator->numbers(); ?>
+    <?= $this->Paginator->next('Next »'); ?>
+    <p>Page <?= $this->Paginator->counter('{{page}} of {{pages}}'); ?></p>
+</div>
