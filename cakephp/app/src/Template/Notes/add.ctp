@@ -1,21 +1,30 @@
-<h1>Add Note</h1>
+<h1 class="text-3xl font-semibold mb-6">Edit Note</h1>
 
-<!-- Form for Adding a New Note -->
-<div class="notes-form">
-    <?= $this->Form->create($note); ?>
-    
-    <fieldset>
-        <legend>Add a New Note</legend>
-        
-        <?= $this->Form->control('title', ['label' => 'Title']); ?>
-        <?= $this->Form->control('description', ['label' => 'Description', 'type' => 'textarea']); ?>
-    </fieldset>
-    
-    <?= $this->Form->button('Save Note'); ?>
-    <?= $this->Form->end(); ?>
+<?= $this->Form->create($note, ['class' => 'bg-white shadow-lg rounded-lg p-6']) ?>
+
+<!-- Title Field -->
+<div class="form-group mb-5">
+    <?= $this->Form->control('title', [
+        'label' => 'Title',
+        'class' => 'border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'required' => true
+    ]) ?>
 </div>
 
-<!-- Link to go back to Notes List -->
-<p>
-    <?= $this->Html->link('Back to Notes List', ['action' => 'index']); ?>
-</p>
+<!-- Description Field -->
+<div class="form-group mb-5">
+    <?= $this->Form->control('description', [
+        'label' => 'Description',
+        'type' => 'textarea',
+        'class' => 'border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'rows' => 4
+    ]) ?>
+</div>
+
+<!-- Submit Button -->
+<div class="flex justify-between">
+    <?= $this->Html->link('Back to List', ['action' => 'index'], ['class' => 'ml-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-200']) ?>
+    <?= $this->Form->button('Create Note', ['class' => 'bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200']) ?>
+</div>
+
+<?= $this->Form->end() ?>

@@ -1,34 +1,11 @@
-<h1>Confirm Delete</h1>
+<h1 class="text-4xl font-bold mb-6 text-gray-800">Confirm Delete</h1>
 
-<p>Are you sure you want to delete the note titled "<strong><?= h($note->title); ?></strong>"?</p>
+<p class="mb-4 text-lg text-gray-700">Are you sure you want to delete the note titled "<strong><?= h($note->title); ?></strong>"?</p>
 
 <!-- Delete Form -->
-<?= $this->Form->create(null, ['url' => ['action' => 'delete', $note->id]]) ?>
-    <?= $this->Form->button('Yes, Delete', ['class' => 'button delete-btn']) ?>
+<?= $this->Form->create(null, ['url' => ['action' => 'delete', $note->id], 'class' => 'bg-white shadow-lg rounded-lg p-6']) ?>
+<div class="flex justify-between">
+    <?= $this->Html->link('No, Go Back', ['action' => 'index'], ['class' => 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-200']) ?>
+    <?= $this->Form->button('Yes, Delete', ['class' => 'bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200']) ?>
+</div>
 <?= $this->Form->end() ?>
-
-<!-- Cancel Button -->
-<?= $this->Html->link('No, Go Back', ['action' => 'index'], ['class' => 'button back-btn']) ?>
-
-<!-- Add some styling for buttons -->
-<style>
-    .button {
-        padding: 10px 20px;
-        margin: 5px;
-        text-decoration: none;
-        border-radius: 5px;
-        color: #fff;
-        cursor: pointer;
-    }
-    .delete-btn {
-        background-color: #e74c3c;
-        border: none;
-    }
-    .back-btn {
-        background-color: #3498db;
-        border: none;
-    }
-    .button:hover {
-        opacity: 0.9;
-    }
-</style>

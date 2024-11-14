@@ -25,11 +25,10 @@
         <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-sm">Apply</button>
 
     </div>
-    <div class="pagination">
-        <?= $this->Paginator->prev('« Previous'); ?>
-        <?= $this->Paginator->numbers(); ?>
-        <?= $this->Paginator->next('Next »'); ?>
+    <div class="pagination flex items-center gap-4">
         <p>Page <?= $this->Paginator->counter('{{page}} of {{pages}}'); ?></p>
+        <?= $this->Paginator->prev('« Previous', [], null, ['class' => $this->Paginator->hasPrev() ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed', 'disabled' => !$this->Paginator->hasPrev()]); ?>
+        <?= $this->Paginator->next('Next »', [], null, ['class' => $this->Paginator->hasNext() ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed', 'disabled' => !$this->Paginator->hasNext()]); ?>
     </div>
 </form>
 
@@ -49,7 +48,7 @@
                         </span>
                         <!-- Toggle Description Button -->
                         <?php if (strlen($note->description) > 100) : ?>
-                            <button class="bg-transparent text-blue-500 hover:text-blue-800 hover:shadow-sm" onclick="toggleDescription('note-<?= $note->id ?>')">Load more</button>
+                            <button class="bg-transparent text-blue-500 px-1 rounded-md hover:text-blue-800 hover:shadow-md" onclick="toggleDescription('note-<?= $note->id ?>')">Load more</button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -57,7 +56,7 @@
                     <span class="text-sm text-gray-500">Created: <?= $note->created_at->format('Y-m-d H:i') ?></span>
                     <div class="space-x-4">
                         <?= $this->Html->link('Edit', ['action' => 'edit', $note->id], ['class' => 'text-indigo-500 hover:underline']) ?>
-                        <?= $this->Html->link('Delete', ['action' => 'delete', $note->id], ['class' => 'text-red-500 hover:underline', 'confirm' => 'Are you sure?']) ?>
+                        <?= $this->Html->link('Delete', ['action' => 'delete', $note->id], ['class' => 'text-red-500 hover:underline']) ?>
                     </div>
                 </div>
             </div>
