@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
+
 /**
  * Notes Controller
  *
@@ -110,8 +112,9 @@ class NotesController extends AppController
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
-        // $users = $this->Notes->Users->find('list', ['limit' => 200]);
-        $this->set(compact('note', 'users'));
+
+        // Pass the note to the view for confirmation
+        $this->set(compact('note'));
     }
 
     /**
