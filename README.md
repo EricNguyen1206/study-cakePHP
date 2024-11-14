@@ -5,7 +5,7 @@ This setup spools up the following containers
 
 * **mysql** (8.0)
 * **nginx**
-* **php-fpm** (php 8.1)
+* **php-fpm** (php 7.4)
 * **mailhog** (smtp server for testing)
 
 The guide will walk you thru the following things
@@ -218,10 +218,10 @@ This container runs `php` (and it's extensions) needed for your CakePHP app
 
 It automatically includes the following extensions
 
-* `php8.1-intl` (required for CakePHP 4.0+)
-* `php8.1-mbstring` (included in the base image)
-* `php8.1-sqlite3` (required for DebugKit)
-* `php8.1-mysql`
+* `php7.4-intl` (required for CakePHP 3.0+)
+* `php7.4-mbstring` (included in the base image)
+* `php7.4-sqlite3` (required for DebugKit)
+* `php7.4-mysql`
 
 It also includes some php ini overrides (see `php-fpm\php-ini-overrides.ini`)
 

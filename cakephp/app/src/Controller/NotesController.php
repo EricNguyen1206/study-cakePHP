@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-
+use Cake\Datasource\Exception\RecordNotFoundException;
 /**
  * Notes Controller
  *
@@ -25,14 +25,6 @@ class NotesController extends AppController
      */
     public function index()
     {
-        // // Fetch all notes from the database
-        // $notes = $this->Notes->find('all', [
-        //     'order' => ['Notes.created_at' => 'DESC']
-        // ]);
-
-        // // Pass notes data to the view
-        // $this->set(compact('notes'));
-
         // Enable the use of the RequestHandler component
         $this->loadComponent('Paginator');
 
@@ -93,8 +85,8 @@ class NotesController extends AppController
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
-        $users = $this->Notes->Users->find('list', ['limit' => 200]);
-        $this->set(compact('note', 'users'));
+        // $users = $this->Notes->Users->find('list', ['limit' => 200]);
+        $this->set(compact('note'));
     }
 
     /**
@@ -118,7 +110,7 @@ class NotesController extends AppController
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
-        $users = $this->Notes->Users->find('list', ['limit' => 200]);
+        // $users = $this->Notes->Users->find('list', ['limit' => 200]);
         $this->set(compact('note', 'users'));
     }
 
@@ -127,18 +119,29 @@ class NotesController extends AppController
      *
      * @param string|null $id Note id.
      * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @throws RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $note = $this->Notes->get($id);
-        if ($this->Notes->delete($note)) {
-            $this->Flash->success(__('The note has been deleted.'));
-        } else {
-            $this->Flash->error(__('The note could not be deleted. Please, try again.'));
+        try {
+            // Fetch the note by its ID
+            $note = $this->Notes->get($id);
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('Note not found.'));
+            return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
+        // If the request is POST (meaning the user confirmed the deletion)
+        if ($this->request->is('post')) {
+            if ($this->Notes->delete($note)) {
+                $this->Flash->success(__('The note "{0}" has been deleted.', h($note->title)));
+            } else {
+                $this->Flash->error(__('Unable to delete the note. Please try again.'));
+            }
+            return $this->redirect(['action' => 'index']);
+        }
+
+        // Pass the note to the view for confirmation
+        $this->set(compact('note'));
     }
 }
