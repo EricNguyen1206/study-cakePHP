@@ -80,15 +80,36 @@ class NotesController extends AppController
     {
         $note = $this->Notes->newEntity();
         if ($this->request->is('post')) {
-            $note = $this->Notes->patchEntity($note, $this->request->getData());
+            $data = $this->request->getData();
+            
+            // Validate and sanitize title
+            if (empty($data['title'])) {
+                $this->Flash->error(__('Title is required.'));
+                $this->set(compact('note'));
+                return;
+            }
+
+            // Sanitize title to prevent SQL injection
+            $data['title'] = htmlspecialchars(strip_tags($data['title']));
+            
+            if (strlen($data['title']) > 255) {
+                $this->Flash->error(__('Title cannot exceed 255 characters.'));
+                $this->set(compact('note'));
+                return;
+            }
+
+            // Sanitize description if provided
+            if (!empty($data['description'])) {
+                $data['description'] = htmlspecialchars(strip_tags($data['description']));
+            }
+
+            $note = $this->Notes->patchEntity($note, $data);
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
-        // $users = $this->Notes->Users->find('list', ['limit' => 200]);
         $this->set(compact('note'));
     }
 
@@ -105,10 +126,32 @@ class NotesController extends AppController
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $note = $this->Notes->patchEntity($note, $this->request->getData());
+            $data = $this->request->getData();
+            
+            // Validate and sanitize title
+            if (empty($data['title'])) {
+                $this->Flash->error(__('Title is required.'));
+                $this->set(compact('note'));
+                return;
+            }
+
+            // Sanitize title to prevent SQL injection
+            $data['title'] = htmlspecialchars(strip_tags($data['title']));
+            
+            if (strlen($data['title']) > 255) {
+                $this->Flash->error(__('Title cannot exceed 255 characters.'));
+                $this->set(compact('note'));
+                return;
+            }
+
+            // Sanitize description if provided
+            if (!empty($data['description'])) {
+                $data['description'] = htmlspecialchars(strip_tags($data['description']));
+            }
+
+            $note = $this->Notes->patchEntity($note, $data);
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
