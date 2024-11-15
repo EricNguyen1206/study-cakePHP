@@ -25,6 +25,7 @@ class UsersTableTest extends TestCase
     public $fixtures = [
         'app.Users',
     ];
+    public $autoFixtures = true;
 
     /**
      * setUp method
@@ -51,16 +52,6 @@ class UsersTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    // public function testInitialize()
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
-
-    /**
      * Test validationDefault method
      *
      * @return void
@@ -76,16 +67,6 @@ class UsersTableTest extends TestCase
 
         $this->assertEmpty($user->getErrors());
     }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    // public function testBuildRules()
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
 
     // Test to verify saving a user
     public function testSaveUser()

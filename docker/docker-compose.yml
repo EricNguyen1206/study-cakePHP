@@ -1,13 +1,31 @@
 ###############################################################################
 #                          Generated on phpdocker.io                          #
 ###############################################################################
-version: '3.1'
 services:
   # myapp-mailhog:
   #   image: 'mailhog/mailhog:latest'
   #   container_name: myapp-mailhog
   #   ports:
   #     - "8125:8025"
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - 9090:9090
+  #   command:
+  #     - --config.file=/etc/prometheus/prometheus.yml
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - grafana-storage:/var/lib/grafana
+  #   restart: always
+  #   depends_on:
+  #     - prometheus
 
   myapp-mysql:
     image: 'mysql:8.0'
@@ -66,3 +84,4 @@ services:
 # Define the volume at the bottom
 volumes:
   mysql_data:  # This creates a named volume for MySQL data
+  # grafana-storage:  # This creates a named volume for Grafana data

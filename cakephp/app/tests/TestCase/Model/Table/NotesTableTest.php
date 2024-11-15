@@ -26,6 +26,7 @@ class NotesTableTest extends TestCase
         'app.Notes',
         'app.Users',
     ];
+    public $autoFixtures = true;
 
     /**
      * setUp method
@@ -52,16 +53,6 @@ class NotesTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    // public function testInitialize()
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
-
-    /**
      * Test validationDefault method
      *
      * @return void
@@ -77,16 +68,6 @@ class NotesTableTest extends TestCase
 
         $this->assertEmpty($note->getErrors());
     }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    // public function testBuildRules()
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
 
     // Test to verify saving a note
     public function testSaveNote()

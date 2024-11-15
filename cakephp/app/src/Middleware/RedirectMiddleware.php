@@ -6,7 +6,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Cake\Http\Response;
 use Cake\Routing\Router;
-
 class RedirectMiddleware
 {
   public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)

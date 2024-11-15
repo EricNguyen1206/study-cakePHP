@@ -17,9 +17,12 @@
         <!-- Sort Dropdown -->
         <select name="sort" class="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300">
             <option value="">Sort by</option>
-            <option value="title" <?= $this->request->getQuery('sort') === 'title' ? 'selected' : '' ?>>Title</option>
-            <option value="created_at" <?= $this->request->getQuery('sort') === 'created_at' ? 'selected' : '' ?>>Created At</option>
+            <option value="title" <?= ($this->request->getQuery('sort') === 'title' && $this->request->getQuery('direction') === 'asc') ? 'selected' : '' ?>>Title (A-Z)</option>
+            <option value="title" <?= ($this->request->getQuery('sort') === 'title' && $this->request->getQuery('direction') === 'desc') ? 'selected' : '' ?>>Title (Z-A)</option>
+            <option value="created_at" <?= ($this->request->getQuery('sort') === 'created_at' && $this->request->getQuery('direction') === 'asc') ? 'selected' : '' ?>>Created At (Oldest first)</option>
+            <option value="created_at" <?= ($this->request->getQuery('sort') === 'created_at' && $this->request->getQuery('direction') === 'desc') ? 'selected' : '' ?>>Created At (Newest first)</option>
         </select>
+        <input type="hidden" name="direction" value="desc">
 
         <!-- Submit Button -->
         <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-sm">Apply</button>
@@ -68,6 +71,20 @@
 
 <!-- JavaScript for Toggle Description -->
 <script>
+    document.querySelector('select[name="sort"]').addEventListener('change', function(e) {
+        const direction = document.querySelector('input[name="direction"]');
+        if (e.target.selectedIndex === 2 || e.target.selectedIndex === 4) {
+            direction.value = 'desc';
+            return;
+        }
+        if (e.target.selectedIndex === 0) {
+            direction.value = '';
+            return;
+        }
+        direction.value = 'asc';
+    });
+
+
     function toggleDescription(id) {
         // Get the closest parent div that contains the description
         const descriptionDiv = document.querySelector(`#${id} .description`);
