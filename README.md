@@ -17,4 +17,4 @@ For those looking to get started quickly, follow these simple steps:
 3. Copy and update /cakephp/app/config/.app_local.php from /cakephp/app/config/.app_local.example.php
 4. Run the setup command: `cd docker && sh setup.sh
 5. Wait for the script run source code setup success
-6. After setup, you can access the website in [localhost:8180](http://localhost:8180/) and phpmyadmin at [localhost:8106](http://localhost:8106/)
+6. After setup, you can access the website at [localhost:8180](http://localhost:8180/) and phpmyadmin at [localhost:8106](http://localhost:8106/)
