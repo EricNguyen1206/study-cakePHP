@@ -15,6 +15,7 @@
 namespace App\Test\TestCase;
 
 use App\Application;
+use App\Middleware\RedirectMiddleware;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -27,6 +28,16 @@ use InvalidArgumentException;
  */
 class ApplicationTest extends IntegrationTestCase
 {
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.Notes',
+        'app.Users',
+    ];
+    public $autoFixtures = true;
 
     /**
      * testBootstrap
@@ -75,10 +86,13 @@ class ApplicationTest extends IntegrationTestCase
         $app = new Application(dirname(dirname(__DIR__)) . '/config');
         $middleware = new MiddlewareQueue();
 
+        // Register the middleware
         $middleware = $app->middleware($middleware);
 
+        // Check for the correct middleware instances
         $this->assertInstanceOf(ErrorHandlerMiddleware::class, $middleware->get(0));
         $this->assertInstanceOf(AssetMiddleware::class, $middleware->get(1));
-        $this->assertInstanceOf(RoutingMiddleware::class, $middleware->get(2));
+        // $this->assertInstanceOf(RoutingMiddleware::class, $middleware->get(2));
+        $this->assertInstanceOf(RedirectMiddleware::class, $middleware->get(2));
     }
 }

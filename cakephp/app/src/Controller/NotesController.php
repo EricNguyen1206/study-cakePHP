@@ -35,6 +35,23 @@ class NotesController extends AppController
         $sort = $this->request->getQuery('sort', 'created_at'); // Default sort by created_at
         $direction = $this->request->getQuery('direction', 'desc'); // Default direction desc
 
+        // Sanitize search input to prevent SQL injection
+        if (!empty($search)) {
+            // Remove any potentially dangerous characters
+            $search = preg_replace('/[^a-zA-Z0-9\s]/', '', $search);
+            // Trim whitespace
+            $search = trim($search);
+        }
+
+        // Validate sort field to prevent SQL injection
+        if (!in_array($sort, ['created_at', 'title'])) {
+            $sort = 'created_at'; // Default to created_at if invalid sort field
+        }
+        // Validate direction field to prevent SQL injection
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc'; // Default to desc if invalid direction field
+        }
+
         // Build the query with search, sort, and direction
         $query = $this->Notes->find()
             // ->contain(['Users'])
@@ -52,22 +69,6 @@ class NotesController extends AppController
 
         // Pass data to the view
         $this->set(compact('notes', 'search', 'sort', 'direction'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Note id.
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $note = $this->Notes->get($id, [
-            'contain' => ['Users'],
-        ]);
-
-        $this->set('note', $note);
     }
 
     /**

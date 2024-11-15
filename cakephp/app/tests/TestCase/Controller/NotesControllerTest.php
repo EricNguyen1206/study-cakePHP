@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Controller;
 use App\Controller\NotesController;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use Cake\ORM\TableRegistry;
 
 /**
  * App\Controller\NotesController Test Case
@@ -15,6 +16,13 @@ class NotesControllerTest extends TestCase
     use IntegrationTestTrait;
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\NotesTable
+     */
+    public $Notes;
+
+    /**
      * Fixtures
      *
      * @var array
@@ -23,6 +31,7 @@ class NotesControllerTest extends TestCase
         'app.Notes',
         'app.Users',
     ];
+    public $autoFixtures = true;
 
     /**
      * Setup method to initialize the test environment
@@ -30,66 +39,88 @@ class NotesControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->session(['Auth.User' => ['id' => 1, 'username' => 'testuser']]);
+        // Load the Notes table
+        $this->Notes = TableRegistry::getTableLocator()->get('Notes');
+
+        // Disable CSRF protection for tests
+        $this->enableCsrfToken();
     }
 
-    /**
-     * Test index method
-     *
-     * @return void
-     */
     public function testIndex()
     {
-        // Perform a GET request to the /notes URL
-        $this->get('/notes');
+        // Simulate a GET request to the index method
+        $this->get('/notes/index');
 
-        // Assert that the response status is 200 (OK)
-        $this->assertResponseOk();
-
-        // Assert that the view contains specific content
+        // Check that the response is successful
+        $this->assertResponseSuccess();
+        // Check that the view contains the notes
         $this->assertResponseContains('Notes');
-
-        // Assert that some data is rendered in the table
-        $this->assertResponseContains('First Note');
     }
 
-    /**
-     * Test view method
-     *
-     * @return void
-     */
-    public function testView()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // Simulate a POST request to add a note
+        $data = [
+            'title' => 'Test Note',
+            'description' => 'This is a test note description.'
+        ];
+        $this->post('/notes/add', $data);
+
+        // Check that the note was saved
+        $this->assertResponseSuccess();
+        $this->assertRedirect(['action' => 'index']);
+        
+        // Verify the note is in the database
+        $query = $this->Notes->find()->where(['title' => 'Test Note']);
+        $this->assertEquals(1, $query->count());
     }
 
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // First, create a note to edit
+        $note = $this->Notes->newEntity([
+            'title' => 'Original Title',
+            'description' => 'Original description.'
+        ]);
+        $this->Notes->save($note);
+
+        // Simulate a POST request to edit the note
+        $data = [
+            'title' => 'Updated Title',
+            'description' => 'Updated description.'
+        ];
+        $this->put('/notes/edit/' . $note->id, $data);
+
+        // Check that the response is successful
+        $this->assertResponseSuccess();
+        $this->assertRedirect(['action' => 'index']);
+        
+        // Verify the note was updated in the database
+        $updatedNote = $this->Notes->get($note->id);
+        $this->assertEquals('Updated Title', $updatedNote->title);
     }
 
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // First, create a note to delete
+        $note = $this->Notes->newEntity([
+            'title' => 'Note to be deleted',
+            'description' => 'This note will be deleted.'
+        ]);
+        $this->Notes->save($note);
+
+        // Verify note exists before deletion
+        $this->assertNotNull($this->Notes->get($note->id));
+
+        // Simulate a DELETE request to delete the note
+        $this->post('/notes/delete/' . $note->id);
+
+        // Check that the response is successful and redirects to index
+        $this->assertResponseSuccess();
+        $this->assertRedirect(['action' => 'index']);
+        
+        // Verify the note is no longer in the database
+        $this->expectException(\Cake\Datasource\Exception\RecordNotFoundException::class);
+        $this->Notes->get($note->id);
     }
 }

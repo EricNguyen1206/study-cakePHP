@@ -30,9 +30,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 
     <?= $this->Html->meta('icon') ?>
-
     <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('style.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -40,26 +38,11 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 
 <body class="bg-gray-100 text-gray-900">
-    <!-- <nav class="top-bar expanded" data-topbar role="navigation">
-        <ul class="title-area large-3 medium-4 columns">
-            <li class="name">
-                <h1><a href=""><?= $this->fetch('title') ?></a></h1>
-            </li>
-        </ul>
-        <div class="top-bar-section">
-            <ul class="right">
-                <li><a target="_blank" href="https://book.cakephp.org/3/">Documentation</a></li>
-                <li><a target="_blank" href="https://api.cakephp.org/3.0/">API</a></li>
-            </ul>
-        </div>
-    </nav> -->
-    <div class="container clearfix mx-auto p-6">
+    <div class="container mx-auto p-6">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </div>
     <?= $this->fetch('script') ?>
-    <footer>
-    </footer>
     <style>
         li {
             list-style: none;
