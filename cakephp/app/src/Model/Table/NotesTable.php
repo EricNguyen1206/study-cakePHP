@@ -53,23 +53,46 @@ class NotesTable extends Table
             ->integer('id')
             ->allowEmptyString('id', null, 'create');
 
-        $validator
-            ->scalar('title')
-            ->maxLength('title', 255)
-            ->requirePresence('title', 'create')
-            ->notEmptyString('title');
+        $validator->add('title', 'custom', [
+            'rule' => function ($value) {
+                if (!$value) {
+                    return false;
+                }
+                if (strlen($value) > 255) {
+                    return 'Title cannot exceed 255 characters';
+                }
+
+                return true;
+            },
+            'message' => 'Title cannot be empty'
+        ]);
 
         $validator
             ->scalar('description')
             ->allowEmptyString('description');
 
-        $validator
-            ->dateTime('created_at')
-            ->notEmptyDateTime('created_at');
 
-        $validator
-            ->dateTime('updated_at')
-            ->notEmptyDateTime('updated_at');
+        $validator->add('created_at', 'custom', [
+            'rule' => function ($value) {
+                if (!$value) {
+                    return false;
+                }
+
+                return true;
+            },
+            'message' => 'Created at cannot be empty'
+        ]);
+
+        $validator->add('updated_at', 'custom', [
+            'rule' => function ($value) {
+                if (!$value) {
+                    return false;
+                }
+
+                return true;
+            },
+            'message' => 'Updated at cannot be empty'
+        ]);
 
         return $validator;
     }

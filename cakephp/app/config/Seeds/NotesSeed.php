@@ -28,6 +28,7 @@ class NotesSeed extends AbstractSeed
                 'description' => 'This is the description for note ' . $i,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
+                'is_active' => true,
             ];
         }
 

@@ -59,7 +59,6 @@ class NotesTableTest extends TestCase
      */
     public function testValidationDefault()
     {
-        // $this->markTestIncomplete('Not implemented yet.');
         $note = $this->Notes->newEntity([
             'user_id' => 1,
             'title' => 'Sample Note',
@@ -67,6 +66,25 @@ class NotesTableTest extends TestCase
         ]);
 
         $this->assertEmpty($note->getErrors());
+    }
+
+    /**
+     * Test validation when title is empty
+     *
+     * @return void
+     */
+    public function testValidationTitleEmpty()
+    {
+        $note = $this->Notes->newEntity([
+            'user_id' => 1,
+            'title' => null,
+            'description' => 'This is a sample note.'
+        ]);
+
+        $errors = $note->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertArrayHasKey('title', $errors);
+        $this->assertEquals('This field cannot be left empty', $errors['title']['_empty']);
     }
 
     // Test to verify saving a note

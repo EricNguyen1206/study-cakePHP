@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\NotesController;
@@ -69,7 +70,7 @@ class NotesControllerTest extends TestCase
         // Check that the note was saved
         $this->assertResponseSuccess();
         $this->assertRedirect(['action' => 'index']);
-        
+
         // Verify the note is in the database
         $query = $this->Notes->find()->where(['title' => 'Test Note']);
         $this->assertEquals(1, $query->count());
@@ -94,14 +95,39 @@ class NotesControllerTest extends TestCase
         // Check that the response is successful
         $this->assertResponseSuccess();
         $this->assertRedirect(['action' => 'index']);
-        
+
         // Verify the note was updated in the database
         $updatedNote = $this->Notes->get($note->id);
         $this->assertEquals('Updated Title', $updatedNote->title);
     }
 
-    public function testDelete()
+    public function testShallowDelete()
     {
+        // First, create a note to delete
+        $note = $this->Notes->newEntity([
+            'title' => 'Note to be shallowly deleted',
+            'description' => 'This note will be marked as inactive.'
+        ]);
+        $this->Notes->save($note);
+
+        // Verify note exists before deletion
+        $this->assertNotNull($this->Notes->get($note->id));
+
+        // Simulate a POST request to delete the note
+        $this->post('/notes/delete/' . $note->id);
+
+        // Check that the response is successful and redirects to index
+        $this->assertResponseSuccess();
+        $this->assertRedirect(['action' => 'index']);
+
+        // Verify the note is still in the database but is_active is false
+        $updatedNote = $this->Notes->get($note->id);
+        $this->assertFalse($updatedNote->is_active);
+    }
+
+    public function testDeleteSuccess()
+    {
+        $this->enableRetainFlashMessages();
         // First, create a note to delete
         $note = $this->Notes->newEntity([
             'title' => 'Note to be deleted',
@@ -112,15 +138,29 @@ class NotesControllerTest extends TestCase
         // Verify note exists before deletion
         $this->assertNotNull($this->Notes->get($note->id));
 
-        // Simulate a DELETE request to delete the note
+        // Simulate a POST request to delete the note
         $this->post('/notes/delete/' . $note->id);
 
         // Check that the response is successful and redirects to index
         $this->assertResponseSuccess();
         $this->assertRedirect(['action' => 'index']);
-        
-        // Verify the note is no longer in the database
-        $this->expectException(\Cake\Datasource\Exception\RecordNotFoundException::class);
-        $this->Notes->get($note->id);
+
+        // Verify the flash message is set
+        $this->assertFlashMessage('The note ' . $note->title . ' has been deactivated.', 'success');
+    }
+
+    public function testDeleteFailed()
+    {
+        $this->enableRetainFlashMessages();
+        // Try to delete a note with id not in database
+        $this->post('/notes/delete/9999');
+
+        // Check that the response is successful and redirects to index
+        $this->assertResponseSuccess();
+        $this->assertRedirect(['action' => 'index']);
+
+
+        // Verify the flash message is set
+        $this->assertFlashMessage('Note not found.', 'error');
     }
 }
