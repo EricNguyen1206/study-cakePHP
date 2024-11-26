@@ -32,6 +32,7 @@ class Note extends Entity
         'description' => true,
         'created_at' => true,
         'updated_at' => true,
+        'is_active' => true,
         'user' => true,
     ];
 }

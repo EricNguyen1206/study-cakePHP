@@ -33,6 +33,10 @@ class CreateNotes extends AbstractMigration
             'update' => 'CURRENT_TIMESTAMP',
             'null' => false,
         ])
+        ->addColumn('is_active', 'boolean', [
+            'default' => true,
+            'null' => false,
+        ])
         ->addForeignKey('user_id', 'users', 'id', [
             'delete' => 'CASCADE',
             'update' => 'NO_ACTION',
