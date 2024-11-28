@@ -58,8 +58,15 @@
                 <div class="flex justify-between items-center mt-4">
                     <span class="text-sm text-gray-500">Created: <?= $note->created_at->format('Y-m-d H:i') ?></span>
                     <div class="space-x-4">
-                        <?= $this->Html->link('Edit', ['action' => 'edit', $note->id], ['class' => 'text-indigo-500 hover:underline']) ?>
-                        <?= $this->Html->link('Delete', ['action' => 'delete', $note->id], ['class' => 'text-red-500 hover:underline']) ?>
+                        <?= $this->Html->link('Edit', ['action' => 'edit', $note->id], ['class' => 'bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg']) ?>
+                        <?= $this->Form->postLink(
+                            'Delete',
+                            ['action' => 'delete', $note->id],
+                            [
+                                'confirm' => 'Are you sure you want to delete this note?',
+                                'class' => 'bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg'
+                            ]
+                        ) ?>
                     </div>
                 </div>
             </div>

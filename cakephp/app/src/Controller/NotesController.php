@@ -41,11 +41,14 @@ class NotesController extends AppController
             // Trim whitespace
             $search = trim($search);
         }
+        // Validate the sort parameter
+        if (!in_array($sort, ['title', 'created_at'])) {
+            $sort = 'created_at';
+        }
 
         // Build the query with search, sort, direction, and is_active = true
         $query = $this->Notes->find()
             ->where(['is_active' => true])
-            // ->contain(['Users'])
             ->order([$sort => $direction]);
 
         // Apply search filter if provided
