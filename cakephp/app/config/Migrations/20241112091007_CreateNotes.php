@@ -1,4 +1,5 @@
 <?php
+
 use Migrations\AbstractMigration;
 
 class CreateNotes extends AbstractMigration
@@ -17,31 +18,35 @@ class CreateNotes extends AbstractMigration
             'null' => true,
             'signed' => true,
         ])
-        ->addColumn('title', 'string', [
-            'limit' => 255,
-            'null' => false,
-        ])
-        ->addColumn('description', 'text', [
-            'null' => true,
-        ])
-        ->addColumn('created_at', 'timestamp', [
-            'default' => 'CURRENT_TIMESTAMP',
-            'null' => false,
-        ])
-        ->addColumn('updated_at', 'timestamp', [
-            'default' => 'CURRENT_TIMESTAMP',
-            'update' => 'CURRENT_TIMESTAMP',
-            'null' => false,
-        ])
-        ->addColumn('is_active', 'boolean', [
-            'default' => true,
-            'null' => false,
-        ])
-        ->addForeignKey('user_id', 'users', 'id', [
-            'delete' => 'CASCADE',
-            'update' => 'NO_ACTION',
-            'constraint' => 'fk_notes_users'
-        ])
-        ->create();
+            ->addColumn('title', 'string', [
+                'limit' => 255,
+                'null' => false,
+            ])
+            ->addColumn('description', 'text', [
+                'null' => true,
+            ])
+            ->addColumn('created_at', 'timestamp', [
+                'default' => 'CURRENT_TIMESTAMP',
+                'null' => false,
+            ])
+            ->addColumn('updated_at', 'timestamp', [
+                'default' => 'CURRENT_TIMESTAMP',
+                'update' => 'CURRENT_TIMESTAMP',
+                'null' => false,
+            ])
+            ->addColumn('is_active', 'boolean', [
+                'default' => true,
+                'null' => false,
+            ])
+            ->addForeignKey('user_id', 'users', 'id', [
+                'delete' => 'CASCADE',
+                'update' => 'NO_ACTION',
+                'constraint' => 'fk_notes_users'
+            ])
+            ->addColumn('image', 'string', [
+                'limit' => 255,
+                'null' => true
+            ])
+            ->create();
     }
 }

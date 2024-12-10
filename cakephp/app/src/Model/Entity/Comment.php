@@ -1,19 +1,22 @@
 <?php
-
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 
 /**
- * User Entity
+ * Comment Entity
  *
  * @property int $id
- * @property string $username
- * @property string|null $email
- * @property string $password
+ * @property int $post_id
+ * @property int $user_id
+ * @property string $content
  * @property \Cake\I18n\FrozenTime $created_at
+ * @property \Cake\I18n\FrozenTime $updated_at
+ *
+ * @property \App\Model\Entity\Post $post
+ * @property \App\Model\Entity\User $user
  */
-class User extends Entity
+class Comment extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -25,20 +28,12 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
-        'username' => true,
-        'email' => true,
-        'password' => true,
+        'post_id' => true,
+        'user_id' => true,
+        'content' => true,
         'created_at' => true,
-        'role' => true,
-
-    ];
-
-    /**
-     * Fields that are excluded from JSON versions of the entity.
-     *
-     * @var array
-     */
-    protected $_hidden = [
-        'password',
+        'updated_at' => true,
+        'post' => true,
+        'user' => true,
     ];
 }

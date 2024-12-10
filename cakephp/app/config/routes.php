@@ -67,6 +67,14 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
+
+    $routes->scope('/auth', function ($routes) {
+        $routes->connect('/login', ['controller' => 'Auth', 'action' => 'login']);
+        $routes->connect('/register', ['controller' => 'Auth', 'action' => 'register']);
+        $routes->connect('/logout', ['controller' => 'Auth', 'action' => 'logout']);
+    });
+
+
     $routes->connect('/notes', ['controller' => 'Notes', 'action' => 'index']);
 
     $routes->connect(
@@ -75,8 +83,34 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['pass' => ['id'], 'id' => '\d+']
     );
 
-    $routes->connect('/notes/delete/:id', 
-        ['controller' => 'Notes', 'action' => 'delete'], 
+    $routes->connect(
+        '/notes/delete/:id',
+        ['controller' => 'Notes', 'action' => 'delete'],
+        ['pass' => ['id'], 'id' => '\d+']
+    );
+
+    $routes->scope('/projects', function ($routes) {
+        $routes->connect('/', ['controller' => 'Projects', 'action' => 'index']);
+        $routes->connect('/add', ['controller' => 'Projects', 'action' => 'add']);
+        $routes->connect('/edit/:id', ['controller' => 'Projects', 'action' => 'edit'], ['pass' => ['id']]);
+        $routes->connect('/delete/:id', ['controller' => 'Projects', 'action' => 'delete'], ['pass' => ['id']]);
+    });
+
+    $routes->scope('/user-project', function ($routes) {
+        $routes->connect('/', ['controller' => 'UserProject', 'action' => 'index']);
+        $routes->connect('/add', ['controller' => 'UserProject', 'action' => 'add']);
+        $routes->connect('/delete/:id', ['controller' => 'UserProject', 'action' => 'delete'], ['pass' => ['id']]);
+    });
+
+    $routes->scope('/comments', function ($routes) {
+        $routes->connect('/', ['controller' => 'Comments', 'action' => 'index']);
+        $routes->connect('/add', ['controller' => 'Comments', 'action' => 'add']);
+        $routes->connect('/delete/:id', ['controller' => 'Comments', 'action' => 'delete'], ['pass' => ['id']]);
+    });
+
+    $routes->connect(
+        '/project/:id',
+        ['controller' => 'Projects', 'action' => 'view'],
         ['pass' => ['id'], 'id' => '\d+']
     );
 

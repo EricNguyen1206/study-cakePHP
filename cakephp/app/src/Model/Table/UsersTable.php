@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -20,68 +21,33 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends Table
 {
-    /**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
     public function initialize(array $config)
     {
         parent::initialize($config);
 
         $this->setTable('users');
-        $this->setDisplayField('id');
+        $this->setDisplayField('username');
         $this->setPrimaryKey('id');
     }
 
-    /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmptyString('id', null, 'create');
-
-        $validator
-            ->scalar('username')
-            ->maxLength('username', 50)
-            ->requirePresence('username', 'create')
-            ->notEmptyString('username');
-
-        $validator
-            ->email('email')
-            ->allowEmptyString('email');
-
-        $validator
-            ->scalar('password')
-            ->maxLength('password', 255)
-            ->requirePresence('password', 'create')
-            ->notEmptyString('password');
-
-        $validator
-            ->dateTime('created_at')
-            ->notEmptyDateTime('created_at');
+            ->notEmptyString('username', 'Vui lòng nhập tên đăng nhập')
+            ->add('username', 'unique', [
+                'rule' => 'validateUnique',
+                'provider' => 'table',
+                'message' => 'Tên đăng nhập đã tồn tại'
+            ])
+            ->email('email', false, 'Vui lòng nhập địa chỉ email hợp lệ')
+            ->allowEmptyString('email') // Email là optional
+            ->notEmptyString('password', 'Vui lòng nhập mật khẩu')
+            ->notEmptyString('role', 'Vui lòng chọn vai trò')
+            ->add('role', 'inList', [
+                'rule' => ['inList', ['project_manager', 'developer']],
+                'message' => 'Vai trò không hợp lệ'
+            ]);
 
         return $validator;
-    }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->isUnique(['email']));
-
-        return $rules;
     }
 }

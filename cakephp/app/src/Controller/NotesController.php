@@ -66,6 +66,56 @@ class NotesController extends AppController
     }
 
     /**
+     * Fetches notes by user_id with pagination.
+     *
+     * @param int $userId The user ID to fetch notes for.
+     * @return \Cake\Http\Response|null
+     */
+    public function fetchNoteByProjectId($projectId = null)
+    {
+        // Enable the use of the RequestHandler component
+        $this->loadComponent('Paginator');
+
+        // Retrieve the search keyword, sort, and direction from query parameters
+        $search = $this->request->getQuery('search');
+        $sort = $this->request->getQuery('sort', 'created_at'); // Default sort by created_at
+        $direction = $this->request->getQuery('direction', 'desc'); // Default direction desc
+
+        // Sanitize search input to prevent SQL injection
+        if (!empty($search)) {
+            // Trim whitespace
+            $search = trim($search);
+        }
+        // Validate the sort parameter
+        if (!in_array($sort, ['title', 'created_at'])) {
+            $sort = 'created_at';
+        }
+
+        // If projectId is not provided, use the current user's projectId
+        if (empty($projectId)) {
+            $projectId = $this->Auth->user('project_id');
+        }
+
+        // Build the query with project_id, search, sort, direction, and is_active = true
+        $query = $this->Notes->find()
+            ->where(['project_id' => $projectId, 'is_active' => true])
+            ->order([$sort => $direction]);
+
+        // Apply search filter if provided
+        if (!empty($search)) {
+            $query->where(['Notes.title LIKE' => '%' . $search . '%']);
+        }
+
+        // Set pagination limit and other settings
+        $notes = $this->Paginator->paginate($query, [
+            'limit' => 5, // Display 5 notes per page
+        ]);
+
+        // Pass data to the view
+        $this->set(compact('notes', 'search', 'sort', 'direction', 'projectId'));
+    }
+
+    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.

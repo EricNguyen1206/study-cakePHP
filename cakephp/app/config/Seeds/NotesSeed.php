@@ -1,4 +1,5 @@
 <?php
+
 use Migrations\AbstractSeed;
 
 /**
@@ -29,6 +30,7 @@ class NotesSeed extends AbstractSeed
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'is_active' => true,
+                'image' => 'https://via.placeholder.com/600/8f209a',
             ];
         }
 
