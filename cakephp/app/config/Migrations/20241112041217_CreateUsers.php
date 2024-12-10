@@ -1,34 +1,39 @@
 <?php
+
 use Migrations\AbstractMigration;
 
 class CreateUsers extends AbstractMigration
 {
-    /**
-     * Change Method.
-     *
-     * More information on this method is available here:
-     * https://book.cakephp.org/phinx/0/en/migrations.html#the-change-method
-     * @return void
-     */
-    public function change()
+    public function up()
     {
         $table = $this->table('users');
         $table->addColumn('username', 'string', [
-                'limit' => 50,
-                'null' => false,
-            ])
+            'limit' => 50,
+            'null' => false
+        ])
+            ->addIndex(['username'], ['unique' => true]) // Unique index
             ->addColumn('email', 'string', [
                 'limit' => 100,
-                'null' => true,
+                'null' => true
             ])
+            ->addIndex(['email'], ['unique' => true]) // Unique index
             ->addColumn('password', 'string', [
                 'limit' => 255,
-                'null' => false,
+                'null' => false
+            ])
+            ->addColumn('role', 'enum', [
+                'values' => ['project_manager', 'developer'],
+                'null' => false
             ])
             ->addColumn('created_at', 'timestamp', [
                 'default' => 'CURRENT_TIMESTAMP',
-                'null' => false,
+                'null' => true
             ])
             ->create();
+    }
+
+    public function down()
+    {
+        $this->dropTable('users');
     }
 }
