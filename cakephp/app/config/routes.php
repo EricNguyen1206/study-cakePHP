@@ -75,10 +75,35 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['pass' => ['id'], 'id' => '\d+']
     );
 
-    $routes->connect('/notes/delete/:id', 
-        ['controller' => 'Notes', 'action' => 'delete'], 
+    $routes->connect(
+        '/notes/delete/:id',
+        ['controller' => 'Notes', 'action' => 'delete'],
         ['pass' => ['id'], 'id' => '\d+']
     );
+
+    $routes->scope('/projects', function ($routes) {
+        $routes->connect('/', ['controller' => 'Projects', 'action' => 'index']);
+        $routes->connect('/add', ['controller' => 'Projects', 'action' => 'add']);
+        $routes->connect('/edit/:id', ['controller' => 'Projects', 'action' => 'edit'], ['pass' => ['id']]);
+        $routes->connect('/delete/:id', ['controller' => 'Projects', 'action' => 'delete'], ['pass' => ['id']]);
+    });
+
+    $routes->scope('/user-project-roles', function ($routes) {
+        $routes->connect('/', ['controller' => 'UserProjectRoles', 'action' => 'index']);
+        $routes->connect('/add', ['controller' => 'UserProjectRoles', 'action' => 'add']);
+        $routes->connect('/delete/:id', ['controller' => 'UserProjectRoles', 'action' => 'delete'], ['pass' => ['id']]);
+    });
+
+    $routes->scope('/posts', function ($routes) {
+        $routes->connect('/', ['controller' => 'Posts', 'action' => 'index']);
+        $routes->connect('/add', ['controller' => 'Posts', 'action' => 'add']);
+        $routes->connect('/delete/:id', ['controller' => 'Posts', 'action' => 'delete'], ['pass' => ['id']]);
+    });
+
+    $routes->scope('/votes', function ($routes) {
+        $routes->connect('/add', ['controller' => 'Votes', 'action' => 'add']);
+        $routes->connect('/delete/:id', ['controller' => 'Votes', 'action' => 'delete'], ['pass' => ['id']]);
+    });
 
     $routes->fallbacks(DashedRoute::class);
 });
