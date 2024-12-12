@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -28,6 +29,7 @@ class User extends Entity
         'email' => true,
         'password' => true,
         'created_at' => true,
+        'role' => true,
     ];
 
     /**

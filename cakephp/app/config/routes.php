@@ -75,10 +75,17 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['pass' => ['id'], 'id' => '\d+']
     );
 
-    $routes->connect('/notes/delete/:id', 
-        ['controller' => 'Notes', 'action' => 'delete'], 
+    $routes->connect(
+        '/notes/delete/:id',
+        ['controller' => 'Notes', 'action' => 'delete'],
         ['pass' => ['id'], 'id' => '\d+']
     );
+
+    $routes->scope('/auth', function ($routes) {
+        $routes->connect('/login', ['controller' => 'Auth', 'action' => 'login']);
+        $routes->connect('/register', ['controller' => 'Auth', 'action' => 'register']);
+        $routes->connect('/logout', ['controller' => 'Auth', 'action' => 'logout']);
+    });
 
     $routes->fallbacks(DashedRoute::class);
 });

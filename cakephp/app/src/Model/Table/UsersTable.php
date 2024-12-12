@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -66,6 +67,11 @@ class UsersTable extends Table
         $validator
             ->dateTime('created_at')
             ->notEmptyDateTime('created_at');
+
+        $validator
+            ->scalar('role')
+            ->requirePresence('role', 'create')
+            ->notEmptyString('role');
 
         return $validator;
     }
