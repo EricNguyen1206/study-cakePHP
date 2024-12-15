@@ -22,7 +22,7 @@ class CreateUsers extends AbstractMigration
                 'null' => false
             ])
             ->addColumn('role', 'enum', [
-                'values' => ['project_manager', 'developer'],
+                'values' => ['manager', 'developer'],
                 'null' => false
             ])
             ->addColumn('created_at', 'timestamp', [

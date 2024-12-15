@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Validation\Validator;
+use Cake\Event\EventInterface;
 
 /**
  * Notes Controller
@@ -20,6 +21,43 @@ class NotesController extends AppController
         parent::initialize();
         // Load the Notes model
         $this->loadModel('Notes');
+        $this->loadComponent('Auth', [
+            'authorize' => 'Controller',
+            'loginAction' => [
+                'controller' => 'Auth',
+                'action' => 'login'
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Auth',
+                'action' => 'login'
+            ],
+            'unauthorizedRedirect' => [
+                'controller' => 'Auth',
+                'action' => 'login'
+            ],
+            'authError' => __('Please login to access this page.')
+        ]);
+    }
+
+    // Before filter to check if user is logged in
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        if (!$this->Auth->user()) {
+            $this->Flash->error(__('Please login to access this page.'));
+            return $this->redirect(['controller' => 'Auth', 'action' => 'login']);
+        }
+    }
+    public function isAuthorized($user)
+    {
+        // Allow all logged-in users to access NotesController
+        if (!empty($user)) {
+            return true;
+        }
+
+        // Deny access if the condition is not met
+        return false;
     }
     /**
      * Index method

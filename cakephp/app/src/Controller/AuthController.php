@@ -3,8 +3,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Auth\DefaultPasswordHasher;
-use Cake\Utility\Security;
 
 class AuthController extends AppController
 {
@@ -27,19 +25,11 @@ class AuthController extends AppController
 
     public function login()
     {
+        $this->viewBuilder()->setLayout('auth');
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
-                $this->request->session()->write('Auth.User', $user);
-
-                // Generate one-time login token
-                $token = [
-                    'token' => Security::hash(Security::randomBytes(32), 'sha256', true),
-                    'expires' => (new \DateTime())->modify('+1 hour')->getTimestamp()
-                ];
-
-                $this->request->session()->write('Auth.Token', $token);
                 return $this->redirect('/notes');
             }
             $this->Flash->error(__('Invalid username or password.'));
@@ -48,18 +38,15 @@ class AuthController extends AppController
 
     public function logout()
     {
-        $session = $this->request->session();
-        $session->destroy();
         return $this->redirect($this->Auth->logout());
     }
 
     public function register()
     {
+        $this->viewBuilder()->setLayout('auth');
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            $user->password = (new DefaultPasswordHasher())->hash($user->password);
-            $user->role = 'developer';
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('You have successfully registered. Please log in.'));
                 return $this->redirect(['action' => 'login']);

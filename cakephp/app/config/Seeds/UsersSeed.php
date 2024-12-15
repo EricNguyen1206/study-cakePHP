@@ -24,7 +24,7 @@ class UsersSeed extends AbstractSeed
                 'username' => 'admin',
                 'email' => 'admin@example.com',
                 'password' => password_hash('password123', PASSWORD_DEFAULT),
-                'role' => 'project_manager',
+                'role' => 'manager',
                 'created_at' => date('Y-m-d H:i:s'),
             ],
             [

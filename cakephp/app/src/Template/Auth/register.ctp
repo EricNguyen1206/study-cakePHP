@@ -30,6 +30,18 @@
         'class' => 'block w-full px-3 py-2 border rounded-md'
       ]) ?>
     </div>
+    <div class="mb-4">
+      <?= $this->Form->control('role', [
+        'label' => 'Role',
+        'type' => 'radio',
+        'options' => [
+          'project_manager' => 'Project Manager',
+          'developer' => 'Developer'
+        ],
+        'default' => 'developer',
+        'class' => 'inline-block mx-2 my-1'
+      ]) ?>
+    </div>
     <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
       Register
     </button>

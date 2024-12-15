@@ -38,6 +38,17 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 
 <body class="bg-gray-100 text-gray-900">
+    <!-- Navigation Header -->
+    <div class="bg-green-500 p-4">
+        <div class="flex justify-between">
+            <h2 class="text-white text-xl font-bold"><?= $this->Html->link('UrNo', ['action' => 'index'], ['class' => 'text-white text-md hover:underline']) ?></h2>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><?= $this->Html->link('Logout', ['controller' => 'Auth', 'action' => 'logout'], ['class' => 'text-white text-md hover:underline']) ?></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
     <div class="container mx-auto p-6">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
