@@ -34,6 +34,11 @@ class UsersTable extends Table
         $this->setTable('users');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+        $this->belongsToMany('Projects', [
+            'through' => 'ProjectUsers',
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'project_id',
+        ]);
     }
 
     /**

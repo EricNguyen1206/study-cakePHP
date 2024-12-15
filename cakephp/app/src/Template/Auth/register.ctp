@@ -35,7 +35,7 @@
         'label' => 'Role',
         'type' => 'radio',
         'options' => [
-          'project_manager' => 'Project Manager',
+          'manager' => 'Project Manager',
           'developer' => 'Developer'
         ],
         'default' => 'developer',

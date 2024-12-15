@@ -87,5 +87,11 @@ Router::scope('/', function (RouteBuilder $routes) {
         $routes->connect('/logout', ['controller' => 'Auth', 'action' => 'logout']);
     });
 
+    $routes->scope('/projects', function (RouteBuilder $builder) {
+        $builder->connect('/', ['controller' => 'Projects', 'action' => 'index']);
+        $builder->connect('/add', ['controller' => 'Projects', 'action' => 'add']);
+    });
+
+
     $routes->fallbacks(DashedRoute::class);
 });

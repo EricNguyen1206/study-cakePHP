@@ -23,14 +23,14 @@ class UsersSeed extends AbstractSeed
             [
                 'username' => 'admin',
                 'email' => 'admin@example.com',
-                'password' => password_hash('password123', PASSWORD_DEFAULT),
+                'password' => password_hash('123456', PASSWORD_DEFAULT),
                 'role' => 'manager',
                 'created_at' => date('Y-m-d H:i:s'),
             ],
             [
                 'username' => 'dev_user',
                 'email' => 'dev@example.com',
-                'password' => password_hash('password123', PASSWORD_DEFAULT),
+                'password' => password_hash('123456', PASSWORD_DEFAULT),
                 'role' => 'developer',
                 'created_at' => date('Y-m-d H:i:s'),
             ],

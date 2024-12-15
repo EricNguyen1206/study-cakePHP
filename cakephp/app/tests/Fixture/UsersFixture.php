@@ -1,22 +1,33 @@
 <?php
+
 namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
-/**
- * UsersFixture
- */
 class UsersFixture extends TestFixture
 {
     public $import = ['table' => 'users'];
 
-    public $records = [
-        [
-            'id' => 1,
-            'username' => 'existinguser',
-            'email' => 'existing@example.com',
-            'password' => 'password123',
-            'created_at' => '2024-11-01 12:00:00'
-        ]
-    ];
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => 1,
+                'username' => 'manager_user',
+                'email' => 'manager@example.com',
+                'password' => '$2y$10$e0VbPHKoO2OoNQ9OPB0Nauq2QsLW7iq/UeU1D6hV1EFYPA1s21sXK', // password123
+                'role' => 'manager',
+                'created_at' => '2024-01-01 00:00:00'
+            ],
+            [
+                'id' => 2,
+                'username' => 'dev_user',
+                'email' => 'dev@example.com',
+                'password' => '$2y$10$e0VbPHKoO2OoNQ9OPB0Nauq2QsLW7iq/UeU1D6hV1EFYPA1s21sXK', // password123
+                'role' => 'developer',
+                'created_at' => '2024-01-01 00:00:00'
+            ]
+        ];
+        parent::init();
+    }
 }

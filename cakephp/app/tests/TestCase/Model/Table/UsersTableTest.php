@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\UsersTable;
@@ -58,7 +59,6 @@ class UsersTableTest extends TestCase
      */
     public function testValidationDefault()
     {
-        // $this->markTestIncomplete('Not implemented yet.');
         $user = $this->Users->newEntity([
             'username' => 'testuser',
             'email' => 'test@example.com',
