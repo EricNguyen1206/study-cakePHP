@@ -28,8 +28,10 @@ class Note extends Entity
      */
     protected $_accessible = [
         'user_id' => true,
+        'project_id' => true,
         'title' => true,
         'description' => true,
+        'image' => true,
         'created_at' => true,
         'updated_at' => true,
         'is_active' => true,

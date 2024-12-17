@@ -20,11 +20,13 @@ class NotesSeed extends AbstractSeed
     {
         $data = [];
         $userId = 1; // Assuming the user ID from the Users seed
-
+        $projectId = 1;
         for ($i = 1; $i <= 10; $i++) {
             $data[] = [
                 'user_id' => $userId,
+                'project_id' => $projectId,
                 'title' => 'Sample Note ' . $i,
+                'image' => 'https://via.placeholder.com/600/92c952',
                 'description' => 'This is the description for note ' . $i,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),

@@ -67,20 +67,6 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
-    $routes->connect('/notes', ['controller' => 'Notes', 'action' => 'index']);
-
-    $routes->connect(
-        '/notes/edit/:id',
-        ['controller' => 'Notes', 'action' => 'edit'],
-        ['pass' => ['id'], 'id' => '\d+']
-    );
-
-    $routes->connect(
-        '/notes/delete/:id',
-        ['controller' => 'Notes', 'action' => 'delete'],
-        ['pass' => ['id'], 'id' => '\d+']
-    );
-
     $routes->scope('/auth', function ($routes) {
         $routes->connect('/login', ['controller' => 'Auth', 'action' => 'login']);
         $routes->connect('/register', ['controller' => 'Auth', 'action' => 'register']);
@@ -90,8 +76,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->scope('/projects', function (RouteBuilder $builder) {
         $builder->connect('/', ['controller' => 'Projects', 'action' => 'index']);
         $builder->connect('/add', ['controller' => 'Projects', 'action' => 'add']);
+        $builder->connect('/add-note/:id', ['controller' => 'Projects', 'action' => 'addNote'], ['pass' => ['id'], 'id' => '\d+']);
+        $builder->connect('/add/:id', ['controller' => 'Projects', 'action' => 'addNote'], ['pass' => ['id'], 'id' => '\d+']);
     });
-
 
     $routes->fallbacks(DashedRoute::class);
 });
