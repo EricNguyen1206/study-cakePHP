@@ -3,6 +3,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\AuthController;
+use App\Enum\RoleEnum;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -49,7 +50,7 @@ class AuthControllerTest extends TestCase
       'username' => 'new_user',
       'email' => 'new_user@example.com',
       'password' => 'password123',
-      'role' => 'manager'
+      'role' => RoleEnum::MANAGER
     ]);
 
     $this->assertRedirect('/auth/login');

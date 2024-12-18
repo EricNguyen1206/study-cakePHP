@@ -3,6 +3,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\ProjectsController;
+use App\Enum\RoleEnum;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -29,7 +30,7 @@ class ProjectsControllerTest extends TestCase
     public function testAddProjectAsManager()
     {
         // Giả lập user login với quyền manager
-        $this->session(['Auth.User' => ['id' => 1, 'username' => 'manager_user', 'role' => 'manager']]);
+        $this->session(['Auth.User' => ['id' => 1, 'username' => 'manager_user', 'role' => RoleEnum::MANAGER]]);
 
         $this->post('/projects/add', [
             'title' => 'New Project',
@@ -46,7 +47,7 @@ class ProjectsControllerTest extends TestCase
     public function testAddProjectAsDeveloper()
     {
         // Giả lập user login với quyền developer
-        $this->session(['Auth.User' => ['id' => 2, 'username' => 'dev_user', 'role' => 'developer']]);
+        $this->session(['Auth.User' => ['id' => 2, 'username' => 'dev_user', 'role' => RoleEnum::DEVELOPER]]);
 
         $this->post('/projects/add', [
             'title' => 'Unauthorized Project',

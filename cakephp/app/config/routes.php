@@ -77,7 +77,11 @@ Router::scope('/', function (RouteBuilder $routes) {
         $builder->connect('/', ['controller' => 'Projects', 'action' => 'index']);
         $builder->connect('/add', ['controller' => 'Projects', 'action' => 'add']);
         $builder->connect('/add-note/:id', ['controller' => 'Projects', 'action' => 'addNote'], ['pass' => ['id'], 'id' => '\d+']);
-        $builder->connect('/add/:id', ['controller' => 'Projects', 'action' => 'addNote'], ['pass' => ['id'], 'id' => '\d+']);
+        $builder->connect('/edit-note/:id', ['controller' => 'Projects', 'action' => 'editNote'], ['pass' => ['id'], 'id' => '\d+']);
+    });
+
+    $routes->scope('/notes', function (RouteBuilder $builder) {
+        $builder->connect('/delete/:id', ['controller' => 'Notes', 'action' => 'delete'], ['pass' => ['id'], 'id' => '\d+']);
     });
 
     $routes->fallbacks(DashedRoute::class);
