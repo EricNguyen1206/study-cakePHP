@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -33,6 +34,11 @@ class UsersTable extends Table
         $this->setTable('users');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+        $this->belongsToMany('Projects', [
+            'through' => 'ProjectUsers',
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'project_id',
+        ]);
     }
 
     /**
@@ -66,6 +72,14 @@ class UsersTable extends Table
         $validator
             ->dateTime('created_at')
             ->notEmptyDateTime('created_at');
+
+        $validator
+            ->scalar('role')
+            ->notEmpty('role', 'A role is required')
+            ->add('role', 'inList', [
+                'rule' => ['inList', ['manager', 'developer']],
+                'message' => 'Please enter a valid role'
+            ]);
 
         return $validator;
     }

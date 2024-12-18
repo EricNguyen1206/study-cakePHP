@@ -2,19 +2,22 @@
 
 namespace App\Model\Entity;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
- * User Entity
+ * Project Entity
  *
  * @property int $id
- * @property string $username
- * @property string|null $email
- * @property string $password
+ * @property string $title
+ * @property string|null $description
+ * @property int $created_by
+ * @property string $status
  * @property \Cake\I18n\FrozenTime $created_at
+ * @property \Cake\I18n\FrozenTime $updated_at
+ *
+ * @property \App\Model\Entity\ProjectUsers[] $user_projects
  */
-class User extends Entity
+class Project extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -26,23 +29,12 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'title' => true,
+        'description' => true,
+        'created_by' => true,
+        'status' => true,
+        'created_at' => true,
+        'updated_at' => true,
+        'user_project_roles' => true,
     ];
-
-    /**
-     * Fields that are excluded from JSON versions of the entity.
-     *
-     * @var array
-     */
-    protected $_hidden = [
-        'password',
-    ];
-
-    protected function _setPassword($password)
-    {
-        if (strlen($password) > 0) {
-            return (new DefaultPasswordHasher)->hash($password);
-        }
-    }
 }

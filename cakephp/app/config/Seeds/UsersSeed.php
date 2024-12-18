@@ -1,4 +1,5 @@
 <?php
+
 use Migrations\AbstractSeed;
 
 /**
@@ -20,15 +21,17 @@ class UsersSeed extends AbstractSeed
     {
         $data = [
             [
-                'username' => 'john_doe',
-                'email' => 'john@example.com',
-                'password' => password_hash('password123', PASSWORD_DEFAULT),
+                'username' => 'admin',
+                'email' => 'admin@example.com',
+                'password' => password_hash('123456', PASSWORD_DEFAULT),
+                'role' => 'manager',
                 'created_at' => date('Y-m-d H:i:s'),
             ],
             [
-                'username' => 'jane_doe',
-                'email' => 'jane@example.com',
-                'password' => password_hash('password123', PASSWORD_DEFAULT),
+                'username' => 'dev_user',
+                'email' => 'dev@example.com',
+                'password' => password_hash('123456', PASSWORD_DEFAULT),
+                'role' => 'developer',
                 'created_at' => date('Y-m-d H:i:s'),
             ],
         ];
