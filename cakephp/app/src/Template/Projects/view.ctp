@@ -8,11 +8,41 @@
     </div>
     <!-- Button Add Note (Show if user is manager) -->
     <?php if ($isManager): ?>
+      <div class="flex items-center gap-2">
+        <a href="<?= $this->Url->build('/projects/add-note/' . $project->id) ?>"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Add Note
+        </a>
+        <!-- Add User Button -->
+        <div class="mt-4">
+          <button onclick="document.getElementById('add-user-form').classList.toggle('hidden')"
+            class="bg-green-500 text-white px-4 py-2 rounded">
+            Add User
+          </button>
 
-      <a href="<?= $this->Url->build('/projects/add-note/' . $project->id) ?>"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Add Note
-      </a>
+          <!-- Add User Form (Dropdown) -->
+          <div id="add-user-form" class="hidden mt-4">
+            <?= $this->Form->create(null, [
+              'url' => ['action' => 'addUser', $project->id],
+              'class' => 'space-y-4'
+            ]) ?>
+
+            <!-- Dropdown List for Users -->
+            <div>
+              <?= $this->Form->control('user_id', [
+                'label' => 'Select Developer',
+                'options' => collection($developers)->combine('id', 'username')->toArray(),
+                'empty' => 'Choose a user',
+                'class' => 'form-select block w-full mt-1'
+              ]) ?>
+            </div>
+
+            <!-- Submit Button -->
+            <?= $this->Form->button('Add User', ['class' => 'bg-blue-500 text-white px-4 py-2 rounded']) ?>
+            <?= $this->Form->end() ?>
+          </div>
+        </div>
+      </div>
     <?php endif; ?>
   </div>
 

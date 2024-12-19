@@ -282,4 +282,53 @@ class ProjectsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function addUser($id = null)
+{
+    $this->loadModel('Users');
+    $this->loadModel('ProjectUsers');
+
+        // Get project information
+        $project = $this->Projects->findById($id)->first();
+
+    if (!$project) {
+        $this->Flash->error(__('Project does not exist.'));
+        return $this->redirect(['action' => 'index']);
+    }
+
+        // Get list of users with role developer and not in this project
+        $existingUserIds = $this->ProjectUsers
+            ->find()
+            ->select(['user_id'])
+            ->where(['project_id' => $id])
+            ->extract('user_id')
+            ->toArray();
+
+    $developers = $this->Users->find('all')
+        ->where([
+            'role' => RoleEnum::DEVELOPER,
+            'id NOT IN' => $existingUserIds
+        ])
+        ->toArray();
+
+    if ($this->request->is('post')) {
+        $userId = $this->request->getData('user_id');
+
+        $projectUser = $this->ProjectUsers->newEntity([
+            'project_id' => $id,
+            'user_id' => $userId,
+            'role' => 'developer'
+        ]);
+
+        if ($this->ProjectUsers->save($projectUser)) {
+            $this->Flash->success(__('Added user to project successfully.'));
+        } else {
+            $this->Flash->error(__('Failed to add user to project. Please try again.'));
+        }
+
+        return $this->redirect(['action' => 'view', $id]);
+        }
+
+        $this->set(compact('project', 'developers'));
+    }
 }

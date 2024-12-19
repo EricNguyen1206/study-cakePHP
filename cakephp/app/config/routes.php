@@ -84,5 +84,10 @@ Router::scope('/', function (RouteBuilder $routes) {
         $builder->connect('/delete/:id', ['controller' => 'Notes', 'action' => 'delete'], ['pass' => ['id'], 'id' => '\d+']);
     });
 
+    $routes->connect(
+        '/projects/add-user/:id',
+        ['controller' => 'Projects', 'action' => 'addUser']
+    )->setPass(['id'])->setPatterns(['id' => '\d+']);
+
     $routes->fallbacks(DashedRoute::class);
 });
