@@ -21,22 +21,8 @@ class NotesController extends AppController
         parent::initialize();
         // Load the Notes model
         $this->loadModel('Notes');
-        $this->loadComponent('Auth', [
-            'authorize' => 'Controller',
-            'loginAction' => [
-                'controller' => 'Auth',
-                'action' => 'login'
-            ],
-            'logoutRedirect' => [
-                'controller' => 'Auth',
-                'action' => 'login'
-            ],
-            'unauthorizedRedirect' => [
-                'controller' => 'Auth',
-                'action' => 'login'
-            ],
-            'authError' => __('Please login to access this page.')
-        ]);
+        $this->loadComponent('Auth');
+        $this->loadModel('Projects');
     }
 
     // Before filter to check if user is logged in
@@ -204,7 +190,7 @@ class NotesController extends AppController
                     'key' => 'error',
                 ]);
             }
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Projects', 'action' => 'view', $note->project_id]);
         }
 
         // Pass the note to the view for confirmation

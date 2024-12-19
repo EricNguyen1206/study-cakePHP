@@ -1,7 +1,7 @@
 <?php
 
 use Migrations\AbstractMigration;
-
+use App\Enum\RoleEnum;
 class CreateUsers extends AbstractMigration
 {
     public function up()
@@ -21,8 +21,8 @@ class CreateUsers extends AbstractMigration
                 'limit' => 255,
                 'null' => false
             ])
-            ->addColumn('role', 'enum', [
-                'values' => ['manager', 'developer'],
+            ->addColumn('role', 'integer', [
+                'limit' => 3,
                 'null' => false
             ])
             ->addColumn('created_at', 'timestamp', [

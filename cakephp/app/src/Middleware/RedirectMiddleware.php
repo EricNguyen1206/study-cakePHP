@@ -13,11 +13,11 @@ class RedirectMiddleware
     // Check if the request URI is the root path `/`
     if ($request->getUri()->getPath() === '/') {
       // Generate the URL for /notes
-      $notesUrl = Router::url(['controller' => 'Notes', 'action' => 'index'], true);
+      $projectsUrl = Router::url(['controller' => 'Projects', 'action' => 'index'], true);
 
       // Redirect to /notes
       return $response
-        ->withHeader('Location', $notesUrl)
+        ->withHeader('Location', $projectsUrl)
         ->withStatus(302); // 302 Found status for redirection
     }
 

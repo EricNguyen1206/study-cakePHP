@@ -6,7 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-
+use App\Enum\RoleEnum;
 /**
  * Users Model
  *
@@ -77,7 +77,7 @@ class UsersTable extends Table
             ->scalar('role')
             ->notEmpty('role', 'A role is required')
             ->add('role', 'inList', [
-                'rule' => ['inList', ['manager', 'developer']],
+                'rule' => ['inList', RoleEnum::allRoles()],
                 'message' => 'Please enter a valid role'
             ]);
 

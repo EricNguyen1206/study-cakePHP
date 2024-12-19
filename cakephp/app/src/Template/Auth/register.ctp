@@ -31,14 +31,15 @@
       ]) ?>
     </div>
     <div class="mb-4">
+      <?php use App\Enum\RoleEnum; ?>
       <?= $this->Form->control('role', [
         'label' => 'Role',
         'type' => 'radio',
         'options' => [
-          'manager' => 'Project Manager',
-          'developer' => 'Developer'
+          RoleEnum::MANAGER => 'Project Manager',
+          RoleEnum::DEVELOPER => 'Developer'
         ],
-        'default' => 'developer',
+        'default' => RoleEnum::DEVELOPER,
         'class' => 'inline-block mx-2 my-1'
       ]) ?>
     </div>
