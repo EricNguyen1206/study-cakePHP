@@ -71,7 +71,28 @@ class ProjectsController extends AppController
         // Check if user is manager
         $isManager = ($this->Auth->user('role') === RoleEnum::MANAGER);
 
-        $this->set(compact('project', 'notes', 'isManager'));
+        if ($isManager) {
+            // List of users in the project
+            $this->loadModel('Users');
+            $usersInProject = $this->Users->find()
+                ->matching('ProjectUsers', function ($q) use ($id) {
+                    return $q->where(['ProjectUsers.project_id' => $id]);
+                })
+                ->where(['Users.role' => RoleEnum::DEVELOPER])
+                ->all();
+
+            // List of users not in the project
+            $usersNotInProject = $this->Users->find()
+                ->notMatching('ProjectUsers', function ($q) use ($id) {
+                    return $q->where(['ProjectUsers.project_id' => $id]);
+                })
+                ->where(['Users.role' => RoleEnum::DEVELOPER])
+                ->all();
+
+            $this->set(compact('usersInProject', 'usersNotInProject'));
+        }
+
+        $this->set(compact('project', 'notes', 'isManager', 'users'));
     }
 
     /**
@@ -283,52 +304,39 @@ class ProjectsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function addUser($id = null)
-{
-    $this->loadModel('Users');
-    $this->loadModel('ProjectUsers');
+    public function addUsers($projectId)
+    {
+        $this->request->allowMethod(['post']);
+        $this->loadModel('ProjectUsers');
 
-        // Get project information
-        $project = $this->Projects->findById($id)->first();
+        $users = $this->request->getData('users');
+        foreach ($users as $userId) {
+            $projectUser = $this->ProjectUsers->newEntity([
+                'project_id' => $projectId,
+                'user_id' => $userId
+            ]);
+            $this->ProjectUsers->save($projectUser);
+        }
 
-    if (!$project) {
-        $this->Flash->error(__('Project does not exist.'));
-        return $this->redirect(['action' => 'index']);
+        $this->Flash->success(__('Users added to project successfully.'));
+        return $this->redirect($this->referer());
     }
 
-        // Get list of users with role developer and not in this project
-        $existingUserIds = $this->ProjectUsers
-            ->find()
-            ->select(['user_id'])
-            ->where(['project_id' => $id])
-            ->extract('user_id')
-            ->toArray();
+    public function deleteUser($projectId, $userId)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $this->loadModel('ProjectUsers');
 
-    $developers = $this->Users->find('all')
-        ->where([
-            'role' => RoleEnum::DEVELOPER,
-            'id NOT IN' => $existingUserIds
-        ])
-        ->toArray();
+        $projectUser = $this->ProjectUsers->find()
+            ->where(['project_id' => $projectId, 'user_id' => $userId])
+            ->firstOrFail();
 
-    if ($this->request->is('post')) {
-        $userId = $this->request->getData('user_id');
-
-        $projectUser = $this->ProjectUsers->newEntity([
-            'project_id' => $id,
-            'user_id' => $userId,
-            'role' => 'developer'
-        ]);
-
-        if ($this->ProjectUsers->save($projectUser)) {
-            $this->Flash->success(__('Added user to project successfully.'));
+        if ($this->ProjectUsers->delete($projectUser)) {
+            $this->Flash->success(__('User removed from project successfully.'));
         } else {
-            $this->Flash->error(__('Failed to add user to project. Please try again.'));
+            $this->Flash->error(__('Unable to remove user.'));
         }
 
-        return $this->redirect(['action' => 'view', $id]);
-        }
-
-        $this->set(compact('project', 'developers'));
+        return $this->redirect($this->referer());
     }
 }

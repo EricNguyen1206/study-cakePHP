@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -32,4 +33,10 @@ class ProjectUser extends Entity
         'user' => true,
         'project' => true,
     ];
+
+    protected function _setTableDependencies()
+    {
+        $this->belongsTo('Users')->setForeignKey('user_id');
+        $this->belongsTo('Projects')->setForeignKey('project_id');
+    }
 }

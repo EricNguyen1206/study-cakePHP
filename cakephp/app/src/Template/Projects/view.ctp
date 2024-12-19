@@ -19,31 +19,48 @@
             class="bg-green-500 text-white px-4 py-2 rounded">
             Add User
           </button>
-
-          <!-- Add User Form (Dropdown) -->
-          <div id="add-user-form" class="hidden mt-4">
-            <?= $this->Form->create(null, [
-              'url' => ['action' => 'addUser', $project->id],
-              'class' => 'space-y-4'
-            ]) ?>
-
-            <!-- Dropdown List for Users -->
-            <div>
-              <?= $this->Form->control('user_id', [
-                'label' => 'Select Developer',
-                'options' => collection($developers)->combine('id', 'username')->toArray(),
-                'empty' => 'Choose a user',
-                'class' => 'form-select block w-full mt-1'
-              ]) ?>
-            </div>
-
-            <!-- Submit Button -->
-            <?= $this->Form->button('Add User', ['class' => 'bg-blue-500 text-white px-4 py-2 rounded']) ?>
-            <?= $this->Form->end() ?>
-          </div>
         </div>
       </div>
     <?php endif; ?>
+  </div>
+
+  <?php if ($isManager): ?>
+    <button id="toggle-users-in-project" class="btn btn-primary">Show Users in Project</button>
+    <button id="toggle-users-not-in-project" class="btn btn-secondary">Add Users</button>
+  <?php endif; ?>
+
+  <!-- Section: Users in Project -->
+  <div id="users-in-project" class="hidden">
+    <h3>Users in Project</h3>
+    <?php foreach ($usersInProject as $user): ?>
+      <div class="chip">
+        <?= h($user->username) ?>
+        <?= $this->Form->postLink('x', [
+          'controller' => 'ProjectUsers',
+          'action' => 'deleteUser',
+          $project->id,
+          $user->id
+        ], [
+          'confirm' => 'Are you sure you want to remove this user?'
+        ]) ?>
+      </div>
+    <?php endforeach; ?>
+    <button id="close-users-in-project" class="btn btn-light">Close</button>
+  </div>
+
+  <!-- Section: Add Users to Project -->
+  <div id="users-not-in-project" class="hidden">
+    <h3>Add Users</h3>
+    <?= $this->Form->create(null, ['url' => ['controller' => 'ProjectUsers', 'action' => 'addUsers', $project->id]]) ?>
+    <?php foreach ($usersNotInProject as $user): ?>
+      <div>
+        <?= $this->Form->checkbox("users[]", ['value' => $user->id]) ?>
+        <?= h($user->username) ?>
+      </div>
+    <?php endforeach; ?>
+    <?= $this->Form->button('Save', ['class' => 'btn btn-success']) ?>
+    <?= $this->Form->end() ?>
+    <button id="close-users-not-in-project" class="btn btn-light">Close</button>
   </div>
 
 
@@ -98,3 +115,24 @@
     <?php endif; ?>
   </div>
 </div>
+
+<script>
+  // Toggle sections
+  document.getElementById('toggle-users-in-project').addEventListener('click', function() {
+    document.getElementById('users-in-project').classList.toggle('hidden');
+    document.getElementById('users-not-in-project').classList.add('hidden');
+  });
+
+  document.getElementById('toggle-users-not-in-project').addEventListener('click', function() {
+    document.getElementById('users-not-in-project').classList.toggle('hidden');
+    document.getElementById('users-in-project').classList.add('hidden');
+  });
+
+  document.getElementById('close-users-in-project').addEventListener('click', function() {
+    document.getElementById('users-in-project').classList.add('hidden');
+  });
+
+  document.getElementById('close-users-not-in-project').addEventListener('click', function() {
+    document.getElementById('users-not-in-project').classList.add('hidden');
+  });
+</script>
