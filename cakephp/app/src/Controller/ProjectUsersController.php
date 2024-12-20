@@ -15,36 +15,39 @@ class ProjectUsersController extends AppController
         $this->set(compact('projectUsers'));
     }
 
-    public function add()
+    public function addUsers($projectId)
     {
-        $projectUser = $this->ProjectUsers->newEmptyEntity();
+        $this->request->allowMethod(['post']);
+        $this->loadModel('ProjectUsers');
 
-        if ($this->request->is('post')) {
-            $projectUser = $this->ProjectUsers->patchEntity($projectUser, $this->request->getData());
-            if ($this->ProjectUsers->save($projectUser)) {
-                $this->Flash->success(__('The project-user association has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('Unable to save project-user association.'));
+        $users = $this->request->getData('users');
+        foreach ($users as $userId) {
+            $projectUser = $this->ProjectUsers->newEntity([
+                'project_id' => $projectId,
+                'user_id' => $userId
+            ]);
+            $this->ProjectUsers->save($projectUser);
         }
 
-        $users = $this->ProjectUsers->Users->find('list');
-        $projects = $this->ProjectUsers->Projects->find('list');
-        $this->set(compact('projectUser', 'users', 'projects'));
+        $this->Flash->success(__('Users added to project successfully.'));
+        return $this->redirect($this->referer());
     }
 
-    public function delete($id = null)
+    public function deleteUser($projectId, $userId)
     {
         $this->request->allowMethod(['post', 'delete']);
+        $this->loadModel('ProjectUsers');
 
-        $projectUser = $this->ProjectUsers->get($id);
+        $projectUser = $this->ProjectUsers->find()
+            ->where(['project_id' => $projectId, 'user_id' => $userId])
+            ->firstOrFail();
+
         if ($this->ProjectUsers->delete($projectUser)) {
-            $this->Flash->success(__('The project-user association has been deleted.'));
+            $this->Flash->success(__('User removed from project successfully.'));
         } else {
-            $this->Flash->error(__('Unable to delete the project-user association.'));
+            $this->Flash->error(__('Unable to remove user.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->referer());
     }
 }

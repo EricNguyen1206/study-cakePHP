@@ -43,11 +43,13 @@ class ProjectsController extends AppController
                 ->where(['user_id' => $user['id']])
                 ->extract('project_id')
                 ->toArray();
+            if (!empty($projectIds)) {
+                $projects = $this->Projects->find('all')
+                    ->where(['id IN' => $projectIds])
+                    ->order(['created_at' => 'DESC'])
+                    ->toArray();
+            }
 
-            $projects = $this->Projects->find('all')
-                ->where(['id IN' => $projectIds])
-                ->order(['created_at' => 'DESC'])
-                ->toArray();
         } else {
             $this->Flash->error(__('Unauthorized access.'));
             return $this->redirect(['controller' => 'Auth', 'action' => 'login']);
@@ -63,6 +65,8 @@ class ProjectsController extends AppController
 
         // Get notes by project_id
         $this->loadModel('Notes');
+        $this->loadModel('Users');
+        $this->loadModel('ProjectUsers');
         $notes = $this->Notes->find()
             ->where(['project_id' => $id, 'is_active' => true])
             ->order(['created_at' => 'DESC'])
@@ -73,26 +77,21 @@ class ProjectsController extends AppController
 
         if ($isManager) {
             // List of users in the project
-            $this->loadModel('Users');
-            $usersInProject = $this->Users->find()
-                ->matching('ProjectUsers', function ($q) use ($id) {
-                    return $q->where(['ProjectUsers.project_id' => $id]);
-                })
-                ->where(['Users.role' => RoleEnum::DEVELOPER])
-                ->all();
+            $usersInProject = $this->Users->find()->matching('Projects', function ($q) use ($id) {
+                return $q->where(['Projects.id' => $id]);
+            })->all();
 
             // List of users not in the project
             $usersNotInProject = $this->Users->find()
-                ->notMatching('ProjectUsers', function ($q) use ($id) {
-                    return $q->where(['ProjectUsers.project_id' => $id]);
+                ->notMatching('Projects', function ($q) use ($id) {
+                    return $q->where(['Projects.id' => $id]);
                 })
                 ->where(['Users.role' => RoleEnum::DEVELOPER])
                 ->all();
-
             $this->set(compact('usersInProject', 'usersNotInProject'));
         }
 
-        $this->set(compact('project', 'notes', 'isManager', 'users'));
+        $this->set(compact('project', 'notes', 'isManager'));
     }
 
     /**
@@ -146,8 +145,8 @@ class ProjectsController extends AppController
                 'region' => 'us-east-1',
                 'endpoint' => 'http://myapp-minio:9000',
                 'credentials' => [
-                    'key' => 'qZ6iB5osY08w6Srxf4fF',
-                    'secret' => 'Nx7iPWBD73ZKiZPaiLP4DlvIo3QCAj2qAqDFlHBO',
+                    'key' => 'WL6UtyT1vqzkxBcHDAEX',
+                    'secret' => 'IUBnS8BP1tPk8ADg71fL7kGrFUtiHKJSaWudeTzf',
                 ],
                 'use_path_style_endpoint' => true, // Required for MinIO
             ]);
@@ -241,8 +240,8 @@ class ProjectsController extends AppController
                 'region' => 'us-east-1',
                 'endpoint' => 'http://myapp-minio:9000',
                 'credentials' => [
-                    'key' => 'qZ6iB5osY08w6Srxf4fF',
-                    'secret' => 'Nx7iPWBD73ZKiZPaiLP4DlvIo3QCAj2qAqDFlHBO',
+                    'key' => 'WL6UtyT1vqzkxBcHDAEX',
+                    'secret' => 'IUBnS8BP1tPk8ADg71fL7kGrFUtiHKJSaWudeTzf',
                 ],
                 'use_path_style_endpoint' => true, // Required for MinIO
             ]);
@@ -302,41 +301,5 @@ class ProjectsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
-    }
-
-    public function addUsers($projectId)
-    {
-        $this->request->allowMethod(['post']);
-        $this->loadModel('ProjectUsers');
-
-        $users = $this->request->getData('users');
-        foreach ($users as $userId) {
-            $projectUser = $this->ProjectUsers->newEntity([
-                'project_id' => $projectId,
-                'user_id' => $userId
-            ]);
-            $this->ProjectUsers->save($projectUser);
-        }
-
-        $this->Flash->success(__('Users added to project successfully.'));
-        return $this->redirect($this->referer());
-    }
-
-    public function deleteUser($projectId, $userId)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $this->loadModel('ProjectUsers');
-
-        $projectUser = $this->ProjectUsers->find()
-            ->where(['project_id' => $projectId, 'user_id' => $userId])
-            ->firstOrFail();
-
-        if ($this->ProjectUsers->delete($projectUser)) {
-            $this->Flash->success(__('User removed from project successfully.'));
-        } else {
-            $this->Flash->error(__('Unable to remove user.'));
-        }
-
-        return $this->redirect($this->referer());
     }
 }
