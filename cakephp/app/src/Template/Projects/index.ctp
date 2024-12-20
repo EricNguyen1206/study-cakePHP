@@ -2,6 +2,7 @@
 
 /**
  * @var \App\View\AppView $this
+ * @var \App\Enum\RoleEnum $role
  * @var array $projects
  * @var array $user
  */
@@ -10,7 +11,7 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold mb-6">Your Projects</h1>
 
-  <?php if ($user['role'] === 'manager'): ?>
+  <?php use App\Enum\RoleEnum; if ($user['role'] === RoleEnum::MANAGER): ?>
     <!-- Form để thêm dự án mới -->
     <div class="mb-8 bg-gray-100 p-4 rounded-lg shadow-md">
       <h2 class="text-lg font-semibold mb-4">Add a New Project</h2>

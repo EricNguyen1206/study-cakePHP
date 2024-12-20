@@ -1,6 +1,7 @@
 <?php
 
 use Migrations\AbstractSeed;
+use App\Enum\RoleEnum;
 
 /**
  * Users seed.
@@ -24,14 +25,14 @@ class UsersSeed extends AbstractSeed
                 'username' => 'admin',
                 'email' => 'admin@example.com',
                 'password' => password_hash('123456', PASSWORD_DEFAULT),
-                'role' => 'manager',
+                'role' => 1,
                 'created_at' => date('Y-m-d H:i:s'),
             ],
             [
                 'username' => 'dev_user',
                 'email' => 'dev@example.com',
                 'password' => password_hash('123456', PASSWORD_DEFAULT),
-                'role' => 'developer',
+                'role' => 2,
                 'created_at' => date('Y-m-d H:i:s'),
             ],
         ];

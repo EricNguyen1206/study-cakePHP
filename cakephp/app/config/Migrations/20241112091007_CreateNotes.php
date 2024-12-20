@@ -17,6 +17,7 @@ class CreateNotes extends AbstractMigration
             'null' => true,
             'signed' => true,
         ])
+        ->addColumn('project_id', 'integer', ['null' => false])
         ->addColumn('title', 'string', [
             'limit' => 255,
             'null' => false,
@@ -24,6 +25,7 @@ class CreateNotes extends AbstractMigration
         ->addColumn('description', 'text', [
             'null' => true,
         ])
+        ->addColumn('image', 'string', ['limit' => 255, 'null' => true])
         ->addColumn('created_at', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',
             'null' => false,
@@ -41,6 +43,11 @@ class CreateNotes extends AbstractMigration
             'delete' => 'CASCADE',
             'update' => 'NO_ACTION',
             'constraint' => 'fk_notes_users'
+        ])
+        ->addForeignKey('project_id', 'projects', 'id', [
+            'delete' => 'CASCADE',
+            'update' => 'NO_ACTION',
+            'constraint' => 'fk_notes_projects'
         ])
         ->create();
     }

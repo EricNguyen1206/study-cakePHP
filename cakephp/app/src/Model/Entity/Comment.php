@@ -4,18 +4,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Note Entity
+ * Comment Entity
  *
  * @property int $id
- * @property int|null $user_id
- * @property string $title
- * @property string|null $description
+ * @property string $content
+ * @property int $user_id
+ * @property int $note_id
  * @property \Cake\I18n\FrozenTime $created_at
- * @property \Cake\I18n\FrozenTime $updated_at
  *
  * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Note $note
  */
-class Note extends Entity
+class Comment extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -27,14 +27,11 @@ class Note extends Entity
      * @var array
      */
     protected $_accessible = [
+        'content' => true,
         'user_id' => true,
-        'project_id' => true,
-        'title' => true,
-        'description' => true,
-        'image' => true,
+        'note_id' => true,
         'created_at' => true,
-        'updated_at' => true,
-        'is_active' => true,
         'user' => true,
+        'note' => true,
     ];
 }
