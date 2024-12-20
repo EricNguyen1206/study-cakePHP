@@ -30,6 +30,15 @@ class User extends Entity
         'id' => false
     ];
 
+
+    public function initialize(array $config)
+    {
+        parent::initialize($config);
+        $this->hasMany('ProjectUsers', [
+            'foreignKey' => 'user_id',
+        ]);
+    }
+
     /**
      * Fields that are excluded from JSON versions of the entity.
      *

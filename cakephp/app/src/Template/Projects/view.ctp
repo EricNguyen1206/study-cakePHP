@@ -8,18 +8,59 @@
     </div>
     <!-- Button Add Note (Show if user is manager) -->
     <?php if ($isManager): ?>
-
-      <a href="<?= $this->Url->build('/projects/add-note/' . $project->id) ?>"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Add Note
-      </a>
+      <div class="flex items-center gap-2">
+        <a href="<?= $this->Url->build('/projects/add-note/' . $project->id) ?>"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Add Note
+        </a>
+      </div>
     <?php endif; ?>
+  </div>
+
+  <?php if ($isManager): ?>
+    <button id="toggle-users-in-project" class="bg-blue-500 text-white px-4 py-2 rounded">Users</button>
+    <button id="toggle-users-not-in-project" class="bg-green-500 text-white px-4 py-2 rounded">Add Users</button>
+  <?php endif; ?>
+
+  <!-- Section: Users in Project -->
+  <div id="users-in-project" class="hidden bg-gray-300 mt-4 p-4 rounded-md">
+    <h3>Users in Project</h3>
+    <?php foreach ($usersInProject as $user): ?>
+      <div class="chip flex items-center gap-2 mb-2">
+        <?= h($user->username) ?>
+        <?= $this->Form->postLink('x', [
+          'controller' => 'ProjectUsers',
+          'action' => 'deleteUser',
+          $project->id,
+          $user->id
+        ], [
+          'confirm' => 'Are you sure you want to remove this user?',
+          'class' => 'bg-red-500 text-white w-[10px] h-[10px] px-2 pb-1 rounded-full'
+        ]) ?>
+      </div>
+    <?php endforeach; ?>
+    <button id="close-users-in-project" class="bg-gray-500 text-white px-4 py-2 rounded">Close</button>
+  </div>
+
+  <!-- Section: Add Users to Project -->
+  <div id="users-not-in-project" class="hidden bg-gray-200 mt-4 p-4 rounded-md">
+    <h3>Add Users</h3>
+    <?= $this->Form->create(null, ['url' => ['controller' => 'ProjectUsers', 'action' => 'addUsers', $project->id]]) ?>
+    <?php foreach ($usersNotInProject as $user): ?>
+      <div>
+        <?= $this->Form->checkbox("users[]", ['value' => $user->id]) ?>
+        <?= h($user->username) ?>
+      </div>
+    <?php endforeach; ?>
+    <?= $this->Form->button('Save', ['class' => 'bg-blue-500 text-white px-4 py-2 rounded']) ?>
+    <?= $this->Form->end() ?>
+    <button id="close-users-not-in-project" class="bg-gray-500 text-white px-4 py-2 rounded">Close</button>
   </div>
 
 
   <!-- List Notes -->
   <div>
-    <h2 class="text-xl font-semibold text-gray-700 mb-4">Notes</h2>
+    <h2 class="text-xl font-semibold text-gray-700 my-4">Notes</h2>
     <?php if (!empty($notes)): ?>
       <ul class="space-y-4">
         <?php foreach ($notes as $note): ?>
@@ -68,3 +109,24 @@
     <?php endif; ?>
   </div>
 </div>
+
+<script>
+  // Toggle sections
+  document.getElementById('toggle-users-in-project').addEventListener('click', function() {
+    document.getElementById('users-in-project').classList.toggle('hidden');
+    document.getElementById('users-not-in-project').classList.add('hidden');
+  });
+
+  document.getElementById('toggle-users-not-in-project').addEventListener('click', function() {
+    document.getElementById('users-not-in-project').classList.toggle('hidden');
+    document.getElementById('users-in-project').classList.add('hidden');
+  });
+
+  document.getElementById('close-users-in-project').addEventListener('click', function() {
+    document.getElementById('users-in-project').classList.add('hidden');
+  });
+
+  document.getElementById('close-users-not-in-project').addEventListener('click', function() {
+    document.getElementById('users-not-in-project').classList.add('hidden');
+  });
+</script>

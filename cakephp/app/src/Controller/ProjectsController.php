@@ -43,11 +43,13 @@ class ProjectsController extends AppController
                 ->where(['user_id' => $user['id']])
                 ->extract('project_id')
                 ->toArray();
+            if (!empty($projectIds)) {
+                $projects = $this->Projects->find('all')
+                    ->where(['id IN' => $projectIds])
+                    ->order(['created_at' => 'DESC'])
+                    ->toArray();
+            }
 
-            $projects = $this->Projects->find('all')
-                ->where(['id IN' => $projectIds])
-                ->order(['created_at' => 'DESC'])
-                ->toArray();
         } else {
             $this->Flash->error(__('Unauthorized access.'));
             return $this->redirect(['controller' => 'Auth', 'action' => 'login']);
@@ -63,6 +65,8 @@ class ProjectsController extends AppController
 
         // Get notes by project_id
         $this->loadModel('Notes');
+        $this->loadModel('Users');
+        $this->loadModel('ProjectUsers');
         $notes = $this->Notes->find()
             ->where(['project_id' => $id, 'is_active' => true])
             ->order(['created_at' => 'DESC'])
@@ -70,6 +74,22 @@ class ProjectsController extends AppController
 
         // Check if user is manager
         $isManager = ($this->Auth->user('role') === RoleEnum::MANAGER);
+
+        if ($isManager) {
+            // List of users in the project
+            $usersInProject = $this->Users->find()->matching('Projects', function ($q) use ($id) {
+                return $q->where(['Projects.id' => $id]);
+            })->all();
+
+            // List of users not in the project
+            $usersNotInProject = $this->Users->find()
+                ->notMatching('Projects', function ($q) use ($id) {
+                    return $q->where(['Projects.id' => $id]);
+                })
+                ->where(['Users.role' => RoleEnum::DEVELOPER])
+                ->all();
+            $this->set(compact('usersInProject', 'usersNotInProject'));
+        }
 
         $this->set(compact('project', 'notes', 'isManager'));
     }
@@ -125,8 +145,8 @@ class ProjectsController extends AppController
                 'region' => 'us-east-1',
                 'endpoint' => 'http://myapp-minio:9000',
                 'credentials' => [
-                    'key' => 'qZ6iB5osY08w6Srxf4fF',
-                    'secret' => 'Nx7iPWBD73ZKiZPaiLP4DlvIo3QCAj2qAqDFlHBO',
+                    'key' => 'WL6UtyT1vqzkxBcHDAEX',
+                    'secret' => 'IUBnS8BP1tPk8ADg71fL7kGrFUtiHKJSaWudeTzf',
                 ],
                 'use_path_style_endpoint' => true, // Required for MinIO
             ]);
@@ -220,8 +240,8 @@ class ProjectsController extends AppController
                 'region' => 'us-east-1',
                 'endpoint' => 'http://myapp-minio:9000',
                 'credentials' => [
-                    'key' => 'qZ6iB5osY08w6Srxf4fF',
-                    'secret' => 'Nx7iPWBD73ZKiZPaiLP4DlvIo3QCAj2qAqDFlHBO',
+                    'key' => 'WL6UtyT1vqzkxBcHDAEX',
+                    'secret' => 'IUBnS8BP1tPk8ADg71fL7kGrFUtiHKJSaWudeTzf',
                 ],
                 'use_path_style_endpoint' => true, // Required for MinIO
             ]);
